@@ -27,7 +27,7 @@
 
             
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="#">Daily Menu</a></li>
                 <li><a href="#">Feature</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>

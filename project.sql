@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2023 at 03:50 AM
+-- Generation Time: Dec 18, 2023 at 09:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,11 +48,35 @@ INSERT INTO `administrator` (`ID`, `Administrator_Username`, `Administrator_Name
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dailymenu`
+--
+
+CREATE TABLE `dailymenu` (
+  `Day` varchar(10) NOT NULL,
+  `FoodItem` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dailymenu`
+--
+
+INSERT INTO `dailymenu` (`Day`, `FoodItem`) VALUES
+('Friday', 'Nasi Goreng, Maggie Curry, Oden'),
+('Monday', 'Nasi Goreng, Maggie Curry, Oden'),
+('Saturday', 'Nasi Lemak, Mee Goreng, Oden'),
+('Sunday', 'Nasi Lemak, Mee Goreng, Oden'),
+('Thursday', 'Nasi Lemak, Maggie Goreng, Oden'),
+('Tuesday', 'Nasi Lemak, Maggie Goreng, Oden'),
+('Wednesday', 'Nasi Goreng, Mee Goreng, Oden');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `food_vendor`
 --
 
 CREATE TABLE `food_vendor` (
-  `Vendor_ID` int(11) NOT NULL,
+  `Vendor_ID` varchar(11) NOT NULL,
   `Vendor_Username` varchar(20) NOT NULL,
   `Vendor_Name` varchar(255) NOT NULL,
   `Vendor_Password` varchar(20) NOT NULL,
@@ -67,7 +91,43 @@ CREATE TABLE `food_vendor` (
 --
 
 INSERT INTO `food_vendor` (`Vendor_ID`, `Vendor_Username`, `Vendor_Name`, `Vendor_Password`, `Vendor_Email`, `Vendor_Address`, `Vendor_PhoneNum`, `Usergroup`) VALUES
-(1, 'cv12345', 'mike', '11111111', '1231@hotmail.com', 'no.333 taman moras', '01523451124', 'Food Vendor');
+('FV23001 ', 'FV23001 ', 'Farah binti Ahmad ', '12345', 'woeimingteoh@gmail.com', 'Pekan, Pahang ', '0135112231 ', 'Food Vendor'),
+('FV23002 ', 'FV23002 ', 'Abu bin Ismail ', '12345', '', 'Temerloh,Pahang ', '012557865 ', 'SS03 '),
+('FV23003 ', 'FV23003 ', 'Siti binti Aiman ', '12345', '', 'Kuantan, Pahang ', '0179940746 ', 'SS06 ');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu`
+--
+
+CREATE TABLE `menu` (
+  `Menu_ID` varchar(200) NOT NULL,
+  `Foodname` varchar(200) NOT NULL,
+  `FoodQuantity` int(11) NOT NULL,
+  `FoodDescription` varchar(200) NOT NULL,
+  `FoodStatus` varchar(200) NOT NULL,
+  `Vendor_ID` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- Add 'FoodImage' column as BLOB
+ALTER TABLE `menu` ADD COLUMN `FoodImage` BLOB;
+
+-- Update 'FoodImage' column type to VARCHAR
+ALTER TABLE `menu` MODIFY COLUMN `FoodImage` VARCHAR(255);
+
+
+
+INSERT INTO `menu` (`Menu_ID`, `Foodname`, `FoodQuantity`, `FoodDescription`, `FoodStatus`, `Vendor_ID`,`FoodImage`) VALUES
+('MN0011', 'Nasi Lemak', 54, '-Regular nasi lemak \r\n\r\n-Add on boiled egg with anchovies. \r\n\r\n-Add rm2 for fried chicken. ', 'available ', 'FV23001', 'C:\\xamppp\\htdocs\\project\\NasiLemak.png'),
+('MN0112', 'Nasi Goreng', 54, '-Regular nasi goreng', 'available', 'FV23001', 'C:\\xamppp\\htdocs\\project\\NasiGoreng.jpeg'),
+('MN0120', 'Oden', 40, '-Sausages and fish balls with oden soup. \r\n\r\n-Add rm2 for noodles and udon.', 'available', 'FV23002', 'C:\\xamppp\\htdocs\\project\\Oden.png'),
+('MN0121', 'Maggie Goreng', 40, '-Regular Maggie goreng', 'available', 'FV23002', 'C:\\xamppp\\htdocs\\project\\MaggieGoreng.jng'),
+('MN0122', 'Maggie Curry', 24, '-Regular Maggie Curry. ', 'available', 'FV23002', 'C:\\xamppp\\htdocs\\project\\MaggieCurry.png'),
+('MN0131', 'Mee goreng', 24, '-Regular mee goreng.', 'available', 'FV22001', 'C:\\xamppp\\htdocs\\project\\MeeGoreng.png');
+
+
 
 -- --------------------------------------------------------
 
@@ -105,10 +165,22 @@ ALTER TABLE `administrator`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `dailymenu`
+--
+ALTER TABLE `dailymenu`
+  ADD PRIMARY KEY (`Day`);
+
+--
 -- Indexes for table `food_vendor`
 --
 ALTER TABLE `food_vendor`
   ADD PRIMARY KEY (`Vendor_ID`);
+
+--
+-- Indexes for table `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`Menu_ID`);
 
 --
 -- Indexes for table `registered_user`
@@ -125,12 +197,6 @@ ALTER TABLE `registered_user`
 --
 ALTER TABLE `administrator`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `food_vendor`
---
-ALTER TABLE `food_vendor`
-  MODIFY `Vendor_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `registered_user`

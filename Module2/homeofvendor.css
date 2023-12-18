@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=FAMILY_NAME:wght@WEIGHT_OR_RANGE&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    
+}
+
+body{
+    background:#fbe3e8;
+}
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+}
+
+.kotak{
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    padding: 25px ;
+    border-radius: 20px;
+    box-shadow: 0 0 128px 0 rgba(0,0,0,0,1), 0 32px 64px -48px rgba(0,0,0,0,0.5);
+
+
+}
+
+.form-kotak{
+    width: 400px;
+    margin: 0px 12px;
+}
+
+.form-kotak header{
+    font-size: 30px;
+    font-weight: 550;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6e4e4;
+}
+
+.form-kotak form .field{
+    display: flex;
+    
+    margin-bottom: 10px;
+    flex-direction: column;
+}
+
+.form-kotak form .input input{
+    margin-top: 5px;
+    height: 45px;
+    width: 100%;
+    font-size: 15px;
+    padding: 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+
+}
+
+.form-select {
+    display: block;
+    width: 100%;
+    height: 45px;
+    padding: .375rem 2.25rem .375rem .75rem;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #54667a;
+    background-color: #fff;
+    background-size: 16px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    
+}
+
+select {
+    word-wrap: normal;
+}
+button, select {
+    text-transform: none;
+}
+
+.btn{
+    height: 35px;
+    background-color: #1e88e5;
+    border-color: #1e88e5;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .15);
+    border: 1;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all;
+    margin-top: 10px;
+    padding: 0px 10px;
+
+}
+
+.btn:hover{
+    opacity: 0.8;
+}
+
+.submit{
+    width: 100%;
+}
+
+.links{
+    margin-bottom: 10px;
+}
+
+.message{
+    text-align: center;
+    background: #f9eded;
+    padding: 15px 0px;
+    border: 1px solid #699053;
+     border-radius: 5px;
+     margin-bottom: 10px;
+     color: red;
+}
+
+/***Home***/
+
+.hero{
+    width: 100%;
+    min-height: 30vh;
+   
+}
+
+
+
+nav{
+    background:linear-gradient(#ee4d2d,#ff7337);;
+    width: 100%;
+    padding: 10px 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+
+}
+
+
+.logo{
+    width: 120px;
+    content: url("./icon/logo.png");
+}
+
+.user-pic{
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left:30px ;
+}
+
+nav ul{
+    width: 100%;
+    text-align: right;
+
+
+}
+
+nav ul li{
+    display: inline-block;
+    list-style: none;
+    margin: 10px 20px;
+}
+
+nav ul li a{
+    color:#fff;
+    text-decoration: none;
+
+}
+
+.sub-menu-wrap{
+    position: absolute;
+    top: 100%;
+    right: 10%;
+    width: 320px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+    
+
+}
+
+.sub-menu-wrap.open-menu{
+    max-height: 400px;
+}
+
+.sub-menu{
+    background: #fff;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 15px;
+    
+}
+
+.user-info{
+    display: flex;
+    align-items: center;
+
+}
+
+.user-info h3{
+    font-weight: 500;
+
+}
+
+.user-info img{
+    width: 60px;
+    border-radius: 15px;
+}
+
+.sub-menu hr{
+    border:0;
+    height: 1px;
+    width: 100%;
+    background: #ccc;
+    margin: 15px 0 10px;
+}
+
+.sub-menu-link{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #525252;
+    margin: 12px 0;
+}
+
+.sub-menu-link p{
+    width: 100%;
+}
+
+.sub-menu-link img{
+    width: 40px;
+    background: #e5e5e5;
+    border-radius: 50%;
+    padding: 8px;
+    margin-right: 15px;
+}
+
+.sub-menu-link span{
+    font-size: 22px;
+    transition: transform 0.5s;
+}
+
+.sub-menu-link:hover span{
+    transform: translate(5px);
+}
+
+
+.sub-menu-link:hover p{
+    font-weight: 600;
+}
+
+/*----------------------------------------------------------------------------------*/
+
+.MenuLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    width: auto;
+    }
+    
+    .card-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      width: 30%; /* Adjusted width to fit three cards in a row */
+      margin: 10px; 
+      cursor: pointer;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+      padding: 2px 16px;
+    }
+ 
