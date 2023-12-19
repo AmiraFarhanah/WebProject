@@ -103,7 +103,7 @@
                                 $_SESSION['id']=$row['Vendor_ID'];
 
                                 if(isset($_SESSION['valid'])){
-                                    header("Location: homefoodvendor.php");
+                                    header("Location: /project/Module2/homefoodvendor.php");
                                     exit();
                                 
                                 }

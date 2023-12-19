@@ -22,11 +22,11 @@ if (!isset($_SESSION['valid'])) {
 <body>
     <div class="hero">
         <nav>
-            <a href="homefoodvendor.php" class="logo"></a>
+            <a href="/Module2/homefoodvendor.php" class="logo"></a>
             
             <ul>
-                <li><a href="homefoodvendor.php">All Menu</a></li>
-                <li><a href="#">Daily Menu</a></li>
+                <li><a href="/project/Module2/homefoodvendor.php">All Menu</a></li>
+                <li><a href="/project/Module2/DailyMenu.php">Daily Menu</a></li>
                 <li><a href="#">OrderList</a></li>
                 <li><a href="#">Dashboard</a></li>
             </ul>
@@ -35,7 +35,7 @@ if (!isset($_SESSION['valid'])) {
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
                     <div class="user-info">
-                        <img src="login.png" style="margin-right: 10px;">
+                        <img src="../login.png" style="margin-right: 10px;">
                         <h3>Hai Lat</h3> 
                     </div>
                     <hr>
@@ -54,25 +54,25 @@ if (!isset($_SESSION['valid'])) {
                             $res_id = $result['ID'];
                         }
 
-                        echo "<a href='login.php' class='sub-menu-link'>
+                        echo "<a href='../login.php' class='sub-menu-link'>
                                 <img src='./icon/login.png'>
                                 <p>Login</p>
                                 <span>></span>
                             </a>";
 
-                        echo "<a href='register.php' class='sub-menu-link'>
+                        echo "<a href='../register.php' class='sub-menu-link'>
                                 <img src='./icon/signin.png' style='height: 40px; width: 40px;'>
                                 <p>Sign In</p>
                                 <span>></span>
                             </a>";
 
-                        echo "<a href='editvendor.php?Id=$res_id' class='sub-menu-link'>
+                        echo "<a href='../editvendor.php?Id=$res_id' class='sub-menu-link'>
                                 <img src='./icon/edit.png' >
                                 <p>Edit Profile</p>
                                 <span>></span>
                             </a>";
 
-                        echo "<a href='logout.php' class='sub-menu-link'>
+                        echo "<a href='../logout.php' class='sub-menu-link'>
                                 <img src='./icon/logout.png' >
                                 <p>Log Out</p>
                                 <span>></span>

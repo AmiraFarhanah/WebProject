@@ -1,9 +1,9 @@
 <?php
 session_start();
-include("config.php");
+include("../config.php");
 
 if (!isset($_SESSION['valid'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
             $result = mysqli_query($con, $sql);
 
             if ($result) {
-                header("Location: homefoodvendor.php");
+                header("Location: /project/Module2/homefoodvendor.php");
                 exit();
             } else {
                 echo "Error updating menu item: " . mysqli_error($con);
@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
         $result = mysqli_query($con, $sql);
 
         if ($result) {
-            header("Location: homefoodvendor.php");
+            header("Location: /project/Module2/homefoodvendor.php");
             exit();
         } else {
             echo "Error updating menu item: " . mysqli_error($con);
