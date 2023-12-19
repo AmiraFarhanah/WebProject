@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bro Code</title>
+    <title>Home Registered User</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
@@ -78,22 +78,7 @@
                         $res_id=$result['ID'];
                     }
 
-                    echo "<a href='login.php' class='sub-menu-link'>
-                        <img src='./icon/login.png'>
-                        <p>Login</p>
-                        <span>></span>
-
-                    </a>";
-
-                    
-
-
-                    echo "<a href='register.php' class='sub-menu-link'>
-                        <img src='./icon/signin.png' style='height: 40px; width: 40px;'>
-                        <p>Sign In</p>
-                        <span>></span>
-
-                    </a>";
+                   
 
                    
                      echo "<a href='edit.php?Id=$res_id' class='sub-menu-link'>

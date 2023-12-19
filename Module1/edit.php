@@ -20,7 +20,7 @@
 <body>
     <div class="hero">
         <nav>
-            <a href="home.html" class="logo"></a>
+            <a href="home.php" class="logo"></a>
             
             <ul>
                 <li><a href="#">Home</a></li>
@@ -34,7 +34,25 @@
                 <div class="sub-menu">
                     <div class="user-info">
                         <img src="login.png" style="margin-right: 10px;">
-                        <h3>Hai Lat</h3> 
+                        <?php
+                        $id=$_SESSION['id'];
+                        
+                        
+                        $res_name=null;
+                        $query= mysqli_query($con, "SELECT * FROM registered_user where ID='$id'");
+                        if (!$query) {
+                            die("Query failed: " . mysqli_error($con));
+                        }
+                    
+                        // Check if there are any results
+                        if ($result = mysqli_fetch_assoc($query)) {
+                            $res_name = $result['Name'];
+                            echo "<h3>$res_name</h3>";
+                        } else {
+                            echo "<h3>No Name Found</h3>"; // or handle the case where the name is not found
+                        }
+                        
+                    ?>
 
 
                     </div>
@@ -90,12 +108,13 @@
                 $password=$_POST['password'];
                 $address=$_POST['address'];
                 $phonenumber=$_POST['phonenumber'];
+                $email=$_POST['email'];
                 $id=$_SESSION['id'];
 
-                $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber' WHERE ID=$id") or die("error occurred");
+                $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email' WHERE ID=$id") or die("error occurred");
                 if($edit_query){
                     echo "<div class='message'>
-                    <p>Registration successfully!</p>
+                    <p>Update successfully!</p>
                     </div><br>";
                     echo "<a href='home.php'><button class='btn'>Go Home</button>";
                 }
@@ -109,6 +128,7 @@
                     $res_username=$result['Username'];
                     $res_password=$result['Password'];
                     $res_address=$result['Address'];
+                    $res_email=$result['Email'];
                     $res_phonenumber=$result['Phonenumber'];
                     
                 }
@@ -133,6 +153,11 @@
             <div class="field input">
                 <label for="address">Address</label>
                 <input type="text" name="address" id="address"  value="<?php echo $res_address?>"placeholder="  Address.." required>
+            </div>
+
+            <div class="field input">
+                <label for="address">Email</label>
+                <input type="text" name="email" id="email"  value="<?php echo $res_email?>"placeholder="  Email.." required>
             </div>
 
             <div class="field input">

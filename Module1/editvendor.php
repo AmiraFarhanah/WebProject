@@ -96,7 +96,7 @@
                 $edit_query=mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumner='$phonenumber', Email='$email' WHERE ID=$id") or die("error occurred");
                 if($edit_query){
                     echo "<div class='message'>
-                    <p>Registration successfully!</p>
+                    <pUpdate successfully!</p>
                     </div><br>";
                     echo "<a href='homefoodvendor.php'><button class='btn'>Go Home</button>";
                 }
