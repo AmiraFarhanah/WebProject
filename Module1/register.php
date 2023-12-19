@@ -21,6 +21,9 @@
                 $phonenumber=$_POST['phonenumber'];
                 $usergroup=$_POST['usergroup'];
                 $email=$_POST['email'];
+                
+
+                $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
 
                 if($usergroup=="Normal User"){
                     //verify the unique username
@@ -37,7 +40,7 @@
                 }
                 else{
                     
-                    mysqli_query($con, "INSERT INTO registered_user (Name, Password, Address, Phonenumber, Username, Usergroup, Email) VALUES ('$name', '$password', '$address', '$phonenumber', '$username', '$usergroup', '$email')") or die("Error Occured");
+                    mysqli_query($con, "INSERT INTO registered_user (Name, Password, Address, Phonenumber, Username, Usergroup, Email, Qrcode) VALUES ('$name', '$password', '$address', '$phonenumber', '$username', '$usergroup', '$email', '$qrcode')") or die("Error Occured");
                     echo "<div class='message'>
                         <p>Registeration successfully!</p>
                         </div><br>";
@@ -59,7 +62,7 @@
                 }
                 else{
                     
-                    mysqli_query($con, "INSERT INTO food_vendor (Name, Password, Address, Phonenumber, Username, Usergroup, Email) VALUES ('$name', '$password', '$address', '$phonenumber', '$username', '$usergroup', '$email')") or die("Error Occured");
+                    mysqli_query($con, "INSERT INTO food_vendor (Name, Password, Address, Phonenumber, Username, Usergroup, Email, Qrcode) VALUES ('$name', '$password', '$address', '$phonenumber', '$username', '$usergroup', '$email', '$qrcode')") or die("Error Occured");
                     echo "<div class='message'>
                         <p>Registeration successfully!</p>
                         </div><br>";
@@ -118,9 +121,13 @@
                     </select>
                 </div>
 
+                <div>
+
                 <div class="field">
                     <input type="submit" name="submit" class="btn" value="Register" required>
                 </div>
+
+                
 
                 <div class="links">
                     Already have account? <a href="login.php">Sign In</a>
@@ -129,6 +136,15 @@
             </form>
 
         </div>
+        <script>
+            let qrImage=document.getElementById("qrImage");
+            let qrText=document.getElementById("username");
+            function generateQR(){
+                qrImage.src= "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+qrText.value;
+            }
+                
+        </script>
+
         <?php }?>
     </div>
 

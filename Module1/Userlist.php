@@ -126,14 +126,14 @@
    <?php
    
    
-   $queryAdmin = "SELECT ID, Username, Name, Email, Usergroup FROM administrator";
+   $queryAdmin = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM administrator";
    $resultAdmin = mysqli_query($con, $queryAdmin);
    
-   $queryVendor = "SELECT ID, Username, Name, Email, Usergroup FROM food_vendor";
+   $queryVendor = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM food_vendor";
    $resultVendor = mysqli_query($con, $queryVendor);
    
    
-   $queryRegisteredUser = "SELECT ID, Username, Name, Email, Usergroup FROM registered_user";
+   $queryRegisteredUser = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM registered_user";
    $resultRegisteredUser = mysqli_query($con, $queryRegisteredUser);
   
         // Merge and sort the data based on ID
@@ -217,6 +217,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>User group</th>
+            <th>Qrcode</th>
             <th>Action</th> <!-- New column for delete button -->
         </tr>";
 
@@ -227,6 +228,7 @@ foreach ($data as $row) {
             <td>" . $row['Name'] . "</td>
             <td>" . $row['Email'] . "</td>
             <td>" . $row['Usergroup'] . "</td>
+            <td>" . $row['Qrcode'] . "</td>
             <td><button  class='styled-button' onclick='deleteRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\")'>Delete</button></td>            
           </tr>";
 }
