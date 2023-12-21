@@ -20,7 +20,7 @@
 <body>
     <div class="hero">
         <nav>
-            <a href="home.html" class="logo"></a>
+            <a href="homeadmin.php" class="logo"></a>
             
             <ul>
                 <li><a href="admindashboard.php">Dashboard</a></li>
@@ -34,31 +34,39 @@
                 <div class="sub-menu">
                     <div class="user-info">
                         <img src="login.png" style="margin-right: 10px;">
-                        <h3>Hai Lat</h3> 
+                        <?php
+                        $id=$_SESSION['id'];
+                        
+                        
+                        $res_name=null;
+                        $query= mysqli_query($con, "SELECT * FROM administrator where ID='$id'");
+                        if (!$query) {
+                            die("Query failed: " . mysqli_error($con));
+                        }
+                    
+                        // Check if there are any results
+                        if ($result = mysqli_fetch_assoc($query)) {
+                            $res_name = $result['Name'];
+                            echo "<h3>$res_name</h3>";
+                        } else {
+                            echo "<h3>No Name Found</h3>"; // or handle the case where the name is not found
+                        }
+                        
+                    
+    ?>
 
 
                     </div>
                     <hr>
-                    <a href="login.html" class="sub-menu-link">
-                        <img src="./icon/login.png">
-                        <p>Login</p>
-                        <span>></span>
-
-                    </a>
-                    <a href="register.html" class="sub-menu-link">
-                        <img src="./icon/signin.png" style="height: 40px; width: 40px;">
-                        <p>Sign In</p>
-                        <span>></span>
-
-                    </a>
-                    <a href="edit.html" class="sub-menu-link">
+                    
+                    <a href="editadmin.php" class="sub-menu-link">
                         <img src="./icon/edit.png"  >
                         <p>Edit Profile</p>
                         <span>></span>
 
                     </a>
 
-                    <a href="#" class="sub-menu-link">
+                    <a href="logout.php" class="sub-menu-link">
                         <img src="./icon/logout.png"  >
                         <p>Log Out</p>
                         <span>></span>
@@ -92,8 +100,9 @@
                 $phonenumber=$_POST['phonenumber'];
                 $email=$_POST['email'];
                 $id=$_SESSION['id'];
+                $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
 
-                $edit_query=mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email' WHERE ID=$id") or die("error occurred");
+                $edit_query=mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
                 if($edit_query){
                     echo "<div class='message'>
                     <p>Update successfully!</p>

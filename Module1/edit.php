@@ -57,26 +57,15 @@
 
                     </div>
                     <hr>
-                    <a href="login.html" class="sub-menu-link">
-                        <img src="./icon/login.png">
-                        <p>Login</p>
-                        <span>></span>
-
-                    </a>
-                    <a href="register.html" class="sub-menu-link">
-                        <img src="./icon/signin.png" style="height: 40px; width: 40px;">
-                        <p>Sign In</p>
-                        <span>></span>
-
-                    </a>
-                    <a href="edit.html" class="sub-menu-link">
+                    
+                    <a href="edit.php" class="sub-menu-link">
                         <img src="./icon/edit.png"  >
                         <p>Edit Profile</p>
                         <span>></span>
 
                     </a>
 
-                    <a href="#" class="sub-menu-link">
+                    <a href="logout.php" class="sub-menu-link">
                         <img src="./icon/logout.png"  >
                         <p>Log Out</p>
                         <span>></span>
@@ -110,13 +99,14 @@
                 $phonenumber=$_POST['phonenumber'];
                 $email=$_POST['email'];
                 $id=$_SESSION['id'];
+                $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
 
-                $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email' WHERE ID=$id") or die("error occurred");
+                $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
                 if($edit_query){
                     echo "<div class='message'>
                     <p>Update successfully!</p>
                     </div><br>";
-                    echo "<a href='home.php'><button class='btn'>Go Home</button>";
+                    echo "<a href='homeadmin.php'><button class='btn'>Go Home</button>";
                 }
 
             }else{
