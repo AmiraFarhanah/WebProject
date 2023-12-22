@@ -22,67 +22,94 @@ if (!isset($_SESSION['valid'])) {
 <body>
     <div class="hero">
         <nav>
-            <a href="/Module2/homefoodvendor.php" class="logo"></a>
+            <a href="/Webproject/Module2/homefoodvendor.php" class="logo"></a>
             
             <ul>
-                <li><a href="/project/Module2/homefoodvendor.php">All Menu</a></li>
-                <li><a href="/project/Module2/DailyMenu.php">Daily Menu</a></li>
+                <li><a href="/Webproject/Module2/homefoodvendor.php">All Menu</a></li>
+                <li><a href="/Webproject/Module2/DailyMenu.php">Daily Menu</a></li>
                 <li><a href="#">OrderList</a></li>
                 <li><a href="#">Dashboard</a></li>
             </ul>
-            <img src="../login.png" class="user-pic" onclick="toggleMenu()">
+            <img src="/Webproject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
 
-            <div class="sub-menu-wrap" id="subMenu">
-                <div class="sub-menu">
-                    <div class="user-info">
-                        <img src="../login.png" style="margin-right: 10px;">
-                        <h3>Hai Lat</h3> 
-                    </div>
-                    <hr>
-                    <div>
-                        <?php
-                        $id = $_SESSION['valid'];
-                        $query = mysqli_query($con, "SELECT * FROM food_vendor where Vendor_ID='$id'");
-                        $res_id = null;
-                        while ($result = mysqli_fetch_assoc($query)) {
-                            $res_name = $result['Vendor_Name'];
-                            $res_username = $result['Vendor_Username'];
-                            $res_password = $result['Vendor_Password'];
-                            $res_address = $result['Vendor_Address'];
-                            $res_phonenumber = $result['Vendor_PhoneNum'];
-                            $res_email = $result['Vendor_Email'];
-                            $res_id = $result['ID'];
-                        }
+<div class="sub-menu-wrap" id="subMenu">
+    <div class="sub-menu">
 
-                        echo "<a href='../login.php' class='sub-menu-link'>
-                                <img src='./icon/login.png'>
-                                <p>Login</p>
-                                <span>></span>
-                            </a>";
+    
+        <div class="user-info">
+            <img src="/Webproject/Module1/login.png" style="margin-right: 10px;">
+            <?php
+            $id=$_SESSION['id'];
+            
+            
+            $res_name=null;
+            $query= mysqli_query($con, "SELECT * FROM food_vendor where ID='$id'");
+            if (!$query) {
+                die("Query failed: " . mysqli_error($con));
+            }
+        
+            // Check if there are any results
+            if ($result = mysqli_fetch_assoc($query)) {
+                $res_name = $result['Name'];
+                echo "<h3>$res_name</h3>";
+            } else {
+                echo "<h3>No Name Found</h3>"; // or handle the case where the name is not found
+            }
+            
+        
+?>
+        </div>
+        <hr>
+        <div>
+        <?php
 
-                        echo "<a href='../register.php' class='sub-menu-link'>
-                                <img src='./icon/signin.png' style='height: 40px; width: 40px;'>
-                                <p>Sign In</p>
-                                <span>></span>
-                            </a>";
+        $id=$_SESSION['id'];
+        $query= mysqli_query($con, "SELECT * FROM food_vendor where ID='$id'");
 
-                        echo "<a href='../editvendor.php?Id=$res_id' class='sub-menu-link'>
-                                <img src='./icon/edit.png' >
-                                <p>Edit Profile</p>
-                                <span>></span>
-                            </a>";
+        $res_id=null;
+        while($result= mysqli_fetch_assoc($query)){
+            $res_name=$result['Name'];
+            $res_username=$result['Username'];
+            $res_password=$result['Password'];
+            $res_address=$result['Address'];
+            $res_phonenumber=$result['Phonenumber'];
+            $res_email=$result['Email'];
+            $res_id=$result['ID'];
+        }
 
-                        echo "<a href='../logout.php' class='sub-menu-link'>
-                                <img src='./icon/logout.png' >
-                                <p>Log Out</p>
-                                <span>></span>
-                            </a>";
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        
+       
+         echo "<a href='editvendor.php?Id=$res_id' class='sub-menu-link'>
+        <img src='./icon/edit.png' >
+        <p>Edit Profile</p>
+        <span>></span>
+        </a>";
+
+
+
+        
+
+        echo "<a href='logout.php' class='sub-menu-link'>
+            <img src='./icon/logout.png' >
+            <p>Log Out</p>
+            <span>></span>
+
+        </a>";
+
+        ?>
+        
+
+
+
+        </div>
+        
+
     </div>
+
+</div>
+
+</nav>
+</div>
     
     <?php
     // Database connection parameters
@@ -124,6 +151,15 @@ if (!isset($_SESSION['valid'])) {
                 $foodstatus = $_POST['foodstatus'];
                 $vendorID = $_POST['vendor_id'];
 
+                // Process checkboxes for each day
+                $sunday = isset($_POST['sunday']) ? 1 : 0;
+                $monday = isset($_POST['monday']) ? 1 : 0;
+                $tuesday = isset($_POST['tuesday']) ? 1 : 0;
+                $wednesday = isset($_POST['wednesday']) ? 1 : 0;
+                $thursday = isset($_POST['thursday']) ? 1 : 0;
+                $friday = isset($_POST['friday']) ? 1 : 0;
+                $saturday = isset($_POST['saturday']) ? 1 : 0;
+
                 // Handle file upload
                 if (isset($_FILES['foodimage']) && $_FILES['foodimage']['error'] === UPLOAD_ERR_OK) {
                     $uploadDir = 'uploads/'; // Specify the directory where you want to store the uploaded images
@@ -141,8 +177,10 @@ if (!isset($_SESSION['valid'])) {
                         $foodImageFilePath = $uploadFile;
 
                         // Insert data into the database
-                        $sql = "INSERT INTO menu (Menu_ID, Foodname, FoodQuantity, FoodDescription, FoodStatus, Vendor_ID, FoodImage) 
-                                VALUES (:menuID, :foodname, :foodquantity, :fooddescription, :foodstatus, :vendorID, :foodImage)";
+                        $sql = "INSERT INTO menu (Menu_ID, Foodname, FoodQuantity, FoodDescription, FoodStatus, Vendor_ID, 
+                                FoodImage, Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday) 
+                                VALUES (:menuID, :foodname, :foodquantity, :fooddescription, :foodstatus, :vendorID, 
+                                :foodImage, :sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday)";
                         
                         $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':menuID', $menuID, PDO::PARAM_STR);
@@ -152,6 +190,13 @@ if (!isset($_SESSION['valid'])) {
                         $stmt->bindParam(':foodstatus', $foodstatus, PDO::PARAM_STR);
                         $stmt->bindParam(':vendorID', $vendorID, PDO::PARAM_STR);
                         $stmt->bindParam(':foodImage', $foodImageFilePath, PDO::PARAM_STR);
+                        $stmt->bindParam(':sunday', $sunday, PDO::PARAM_INT);
+                        $stmt->bindParam(':monday', $monday, PDO::PARAM_INT);
+                        $stmt->bindParam(':tuesday', $tuesday, PDO::PARAM_INT);
+                        $stmt->bindParam(':wednesday', $wednesday, PDO::PARAM_INT);
+                        $stmt->bindParam(':thursday', $thursday, PDO::PARAM_INT);
+                        $stmt->bindParam(':friday', $friday, PDO::PARAM_INT);
+                        $stmt->bindParam(':saturday', $saturday, PDO::PARAM_INT);
 
                         $stmt->execute();
 
@@ -166,42 +211,50 @@ if (!isset($_SESSION['valid'])) {
         }
 
         // Fetch the menu items for display
-        $vendorID = $_POST['vendor_id'] ?? 'FV23001';
-        $sql = "SELECT * FROM menu WHERE Vendor_ID = :vendorID";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':vendorID', $vendorID, PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$vendorID = $_POST['vendor_id'] ?? 'FV23001';
+$sql = "SELECT * FROM menu WHERE Vendor_ID = :vendorID";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':vendorID', $vendorID, PDO::PARAM_STR);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Output the menu in an HTML table with edit and delete buttons
-        echo '<table border="1">';
-        echo '<tr><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th><th>FoodStatus</th><th>Vendor_ID</th><th>FoodImage</th><th>Actions</th></tr>';
+// Output the menu in an HTML table with edit and delete buttons
+echo '<table border="1">';
+echo '<tr><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th><th>FoodStatus</th><th>Vendor_ID</th><th>FoodImage</th>';
+echo '<th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
 
-        foreach ($result as $row) {
-            echo '<tr>';
-            echo '<td>' . $row['Menu_ID'] . '</td>';
-            echo '<td>' . $row['Foodname'] . '</td>';
-            echo '<td>' . $row['FoodQuantity'] . '</td>';
-            echo '<td>' . $row['FoodDescription'] . '</td>';
-            echo '<td>' . $row['FoodStatus'] . '</td>';
-            echo '<td>' . $row['Vendor_ID'] . '</td>';
-            
+foreach ($result as $row) {
+    echo '<tr>';
+    echo '<td>' . $row['Menu_ID'] . '</td>';
+    echo '<td>' . $row['Foodname'] . '</td>';
+    echo '<td>' . $row['FoodQuantity'] . '</td>';
+    echo '<td>' . $row['FoodDescription'] . '</td>';
+    echo '<td>' . $row['FoodStatus'] . '</td>';
+    echo '<td>' . $row['Vendor_ID'] . '</td>';
 
-           // Display the FoodImage (assuming it's a file path)
-            echo '<td><img src="' . $row['foodimage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
+    // Display the FoodImage (assuming it's a file path)
+    echo '<td><img src="' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
 
-            
-            echo '<td>';
-            echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-            echo '<input type="hidden" name="menu_id" value="' . $row['Menu_ID'] . '">';
-            echo '<input type="submit" name="edit" value="Edit">';
-            echo '<input type="submit" name="delete" value="Delete">';
-            echo '</form>';
-            echo '</td>';
-            echo '</tr>';
-        }
+    // Display checkboxes for each day
+    echo '<td>' . ($row['Sunday'] ? 'yes' : '') . '</td>';
+    echo '<td>' . ($row['Monday'] ? 'yes' : '') . '</td>';
+    echo '<td>' . ($row['Tuesday'] ? 'yes' : '') . '</td>';
+    echo '<td>' . ($row['Wednesday'] ? 'yes' : '') . '</td>';
+    echo '<td>' . ($row['Thursday'] ? 'yes' : '') . '</td>';
+    echo '<td>' . ($row['Friday'] ? 'yes' : '') . '</td>';
+    echo '<td>' . ($row['Saturday'] ? 'yes' : '') . '</td>';
 
-        echo '</table>';
+    echo '<td>';
+    echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
+    echo '<input type="hidden" name="menu_id" value="' . $row['Menu_ID'] . '">';
+    echo '<input type="submit" name="edit" value="Edit">';
+    echo '<input type="submit" name="delete" value="Delete">';
+    echo '</form>';
+    echo '</td>';
+    echo '</tr>';
+}
+
+echo '</table>';
 
         echo '<h2>Add New Menu Item</h2>';
         echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" enctype="multipart/form-data">';
@@ -213,6 +266,15 @@ if (!isset($_SESSION['valid'])) {
 
         // Add input for image upload
         echo 'FoodImage: <input type="file" name="foodimage" accept="image/*"><br>';
+
+        // Add checkboxes for each day
+        echo 'Sunday: <input type="checkbox" name="sunday"><br>';
+        echo 'Monday: <input type="checkbox" name="monday"><br>';
+        echo 'Tuesday: <input type="checkbox" name="tuesday"><br>';
+        echo 'Wednesday: <input type="checkbox" name="wednesday"><br>';
+        echo 'Thursday: <input type="checkbox" name="thursday"><br>';
+        echo 'Friday: <input type="checkbox" name="friday"><br>';
+        echo 'Saturday: <input type="checkbox" name="saturday"><br>';
 
         echo '<input type="hidden" name="vendor_id" value="' . $vendorID . '">';
         echo '<input type="submit" name="add" value="Add Menu">';
