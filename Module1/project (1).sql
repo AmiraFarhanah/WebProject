@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2023 at 03:50 AM
+-- Generation Time: Dec 20, 2023 at 10:48 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,21 +29,22 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `administrator` (
   `ID` int(11) NOT NULL,
-  `Administrator_Username` varchar(10) NOT NULL,
-  `Administrator_Name` varchar(255) NOT NULL,
-  `Administrator_Password` varchar(20) NOT NULL,
-  `Administrator_Address` varchar(255) NOT NULL,
-  `Administrator_PhoneNum` varchar(13) NOT NULL,
-  `Administrator_EmailAddress` varchar(50) NOT NULL,
-  `Usergroup` varchar(20) NOT NULL
+  `Username` varchar(10) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `Password` varchar(20) NOT NULL,
+  `Address` varchar(255) NOT NULL,
+  `Phonenumber` varchar(13) NOT NULL,
+  `Email` varchar(50) NOT NULL,
+  `Usergroup` varchar(20) NOT NULL,
+  `Qrcode` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `administrator`
 --
 
-INSERT INTO `administrator` (`ID`, `Administrator_Username`, `Administrator_Name`, `Administrator_Password`, `Administrator_Address`, `Administrator_PhoneNum`, `Administrator_EmailAddress`, `Usergroup`) VALUES
-(1, 'CD99999', 'Spongbob', '12341234', 'No 123, Taman Durian', '0999999999', '345@gmail.com', 'Administrator');
+INSERT INTO `administrator` (`ID`, `Username`, `Name`, `Password`, `Address`, `Phonenumber`, `Email`, `Usergroup`, `Qrcode`) VALUES
+(1, 'CD99999', 'Spongbob', '12341234', 'No 123, Taman Durian', '0999999999', '345@gmail.com', 'Administrator', '');
 
 -- --------------------------------------------------------
 
@@ -52,22 +53,25 @@ INSERT INTO `administrator` (`ID`, `Administrator_Username`, `Administrator_Name
 --
 
 CREATE TABLE `food_vendor` (
-  `Vendor_ID` int(11) NOT NULL,
-  `Vendor_Username` varchar(20) NOT NULL,
-  `Vendor_Name` varchar(255) NOT NULL,
-  `Vendor_Password` varchar(20) NOT NULL,
-  `Vendor_Email` varchar(100) NOT NULL,
-  `Vendor_Address` varchar(255) NOT NULL,
-  `Vendor_PhoneNum` varchar(13) NOT NULL,
-  `Usergroup` varchar(20) NOT NULL
+  `ID` int(11) NOT NULL,
+  `Username` varchar(20) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `Password` varchar(20) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Address` varchar(255) NOT NULL,
+  `Phonenumber` varchar(13) NOT NULL,
+  `Usergroup` varchar(20) NOT NULL,
+  `Status` varchar(10) NOT NULL DEFAULT 'Pending',
+  `Qrcode` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `food_vendor`
 --
 
-INSERT INTO `food_vendor` (`Vendor_ID`, `Vendor_Username`, `Vendor_Name`, `Vendor_Password`, `Vendor_Email`, `Vendor_Address`, `Vendor_PhoneNum`, `Usergroup`) VALUES
-(1, 'cv12345', 'mike', '11111111', '1231@hotmail.com', 'no.333 taman moras', '01523451124', 'Food Vendor');
+INSERT INTO `food_vendor` (`ID`, `Username`, `Name`, `Password`, `Email`, `Address`, `Phonenumber`, `Usergroup`, `Status`, `Qrcode`) VALUES
+(1, 'cv12345', 'mike', '11111111', '1231@hotmail.com', 'no.333 taman moras', '01523451124', 'Food Vendor', 'Pending', ''),
+(2, '111qqq', 'mandy', '1111', '1111', '11111', '11111', 'Food Vendor', 'Approved', '');
 
 -- --------------------------------------------------------
 
@@ -83,16 +87,17 @@ CREATE TABLE `registered_user` (
   `Address` varchar(255) NOT NULL,
   `Phonenumber` varchar(13) NOT NULL,
   `Email` varchar(50) NOT NULL,
-  `Usergroup` varchar(20) NOT NULL
+  `Usergroup` varchar(20) NOT NULL,
+  `Qrcode` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `registered_user`
 --
 
-INSERT INTO `registered_user` (`ID`, `Username`, `Name`, `Password`, `Address`, `Phonenumber`, `Email`, `Usergroup`) VALUES
-(6, 'CT12345', 'Nicholas Tan', '22223333', 'no.1211taman arcana', '0172341234', '', 'Normal User'),
-(7, 'nn14443', 'mike', '123131321', '131231', '13131', '', 'Food Vendor');
+INSERT INTO `registered_user` (`ID`, `Username`, `Name`, `Password`, `Address`, `Phonenumber`, `Email`, `Usergroup`, `Qrcode`) VALUES
+(6, 'CT12345', 'Nicholas Tan', '22223333', 'no.1211taman arcana moras', '0172341234', '', 'Normal User', ''),
+(14, 'qqq', '111', '111', '111', '111', '111', 'Normal User', '<img src= \"https://api.qrserver.com/v1/create-qr-code/?data=111&size=100x100\">');
 
 --
 -- Indexes for dumped tables
@@ -108,7 +113,7 @@ ALTER TABLE `administrator`
 -- Indexes for table `food_vendor`
 --
 ALTER TABLE `food_vendor`
-  ADD PRIMARY KEY (`Vendor_ID`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indexes for table `registered_user`
@@ -130,13 +135,13 @@ ALTER TABLE `administrator`
 -- AUTO_INCREMENT for table `food_vendor`
 --
 ALTER TABLE `food_vendor`
-  MODIFY `Vendor_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `registered_user`
 --
 ALTER TABLE `registered_user`
-  MODIFY `ID` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
