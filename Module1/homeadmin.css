@@ -257,6 +257,8 @@ nav ul li a{
     font-weight: 600;
 }
 
+
+
 /***TableMenu***/
 .table {
     width: 80%; /* Adjust the width as needed */
@@ -288,100 +290,3 @@ nav ul li a{
     background-color: white;
     text-align: center;
 }
-
-/***ADDMENU***/
-.form-title{
-    text-align: center;
-;
-}
-
-.centered-container {
-    margin:  auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-/* Form and Table Styles */
-.addmenu{
-    text-align: center;
-    font-weight: bold ;
-    font-size: 30px;
-}
-
-.form-table-container {
-    width: 40%;
-    margin: 50px auto;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-table {
-    width: 100%;
-}
-
-.form-table h2 {
-    background-color: #333;
-    color: #fff;
-    padding: 15px;
-    margin: 0;
-}
-
-.form-table td {
-    padding: 15px;
-    border-bottom: 1px solid #ccc;
-}
-
-.form-table input[type="text"],
-.form-table input[type="number"],
-.form-table textarea,
-.form-table input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.form-table textarea {
-    resize: vertical;
-}
-
-.form-table input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-.form-table input[type="submit"] {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.form-table input[type="submit"]:hover {
-    background-color: #555;
-}
-
-/***button***/
-
-.buttonClass {
-    font-size: 14px;
-    font-family: Arial, sans-serif;
-    width: 70px;
-    height: 30px;
-    color: #555;
-    font-weight: bold;
-    border-radius: 6px;
-    box-shadow: inset 0px 1px 0px 0px #f29c93;
-    text-shadow: inset 0px 1px 0px #b23e35;
-    cursor: pointer;
-    
-}
-

@@ -40,8 +40,6 @@
                                     exit();
                                 
                                 }
-
-
                         }   
 
                     
@@ -103,7 +101,7 @@
                                 $_SESSION['id']=$row['ID'];
 
                                 
-                                    header("Location: homefoodvendor.php");
+                                    header("Location: /WebProject/Module2/homefoodvendor.php");
                                     exit();
                             
                                 

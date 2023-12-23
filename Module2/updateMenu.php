@@ -13,6 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     $foodquantity = $_POST['foodquantity'];
     $fooddescription = $_POST['fooddescription'];
     $foodstatus = $_POST['foodstatus'];
+    $availableDays = [
+        'Sunday' => isset($_POST['Sunday']) ? 1 : 0,
+        'Monday' => isset($_POST['Monday']) ? 1 : 0,
+        'Tuesday' => isset($_POST['Tuesday']) ? 1 : 0,
+        'Wednesday' => isset($_POST['Wednesday']) ? 1 : 0,
+        'Thursday' => isset($_POST['Thursday']) ? 1 : 0,
+        'Friday' => isset($_POST['Friday']) ? 1 : 0,
+        'Saturday' => isset($_POST['Saturday']) ? 1 : 0,
+    ];
+
+    // Convert the array to a comma-separated string for database storage
+    $availableDaysString = implode(',', $availableDays);
+    
 
     // Handle file upload
     if (isset($_FILES['new_foodimage']) && $_FILES['new_foodimage']['error'] === UPLOAD_ERR_OK) {
@@ -26,21 +39,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
 
         if (move_uploaded_file($_FILES['new_foodimage']['tmp_name'], $uploadFile)) {
             // File successfully uploaded, now you can store the file path in the database
-            $newFoodImageFilePath = $uploadFile;
+            $newFoodImageFilePath = $uploadDir . basename($_FILES['new_foodimage']['name']);
 
             // Update data in the database including the new image path
             $sql = "UPDATE menu SET 
-                    Foodname = '$foodname',
-                    FoodQuantity = $foodquantity,
-                    FoodDescription = '$fooddescription',
-                    FoodStatus = '$foodstatus',
-                    FoodImage = '$newFoodImageFilePath'
-                    WHERE Menu_ID = '$menuID'";
+            Foodname='$foodname', 
+            FoodQuantity='$foodquantity', 
+            FoodDescription='$fooddescription', 
+            FoodStatus='$foodstatus',
+            FoodImage = '$newFoodImageFilePath', 
+            Sunday='" . $_POST['Sunday'] . "', 
+            Monday='" . $_POST['Monday'] . "', 
+            Tuesday='" . $_POST['Tuesday'] . "', 
+            Wednesday='" . $_POST['Wednesday'] . "', 
+            Thursday='" . $_POST['Thursday'] . "', 
+            Friday='" . $_POST['Friday'] . "', 
+            Saturday='" . $_POST['Saturday'] . "' 
+            WHERE Menu_ID='$menuID'";
+
 
             $result = mysqli_query($con, $sql);
 
             if ($result) {
-                header("Location: /project/Module2/homefoodvendor.php");
+                header("Location: /WebProject/Module2/homefoodvendor.php");
                 exit();
             } else {
                 echo "Error updating menu item: " . mysqli_error($con);
@@ -51,16 +72,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     } else {
         // No new image provided, update other fields only
         $sql = "UPDATE menu SET 
-                Foodname = '$foodname',
-                FoodQuantity = $foodquantity,
-                FoodDescription = '$fooddescription',
-                FoodStatus = '$foodstatus'
-                WHERE Menu_ID = '$menuID'";
+    Foodname='$foodname', 
+    FoodQuantity='$foodquantity', 
+    FoodDescription='$fooddescription', 
+    FoodStatus='$foodstatus', 
+    Sunday='" . $_POST['Sunday'] . "', 
+    Monday='" . $_POST['Monday'] . "', 
+    Tuesday='" . $_POST['Tuesday'] . "', 
+    Wednesday='" . $_POST['Wednesday'] . "', 
+    Thursday='" . $_POST['Thursday'] . "', 
+    Friday='" . $_POST['Friday'] . "', 
+    Saturday='" . $_POST['Saturday'] . "' 
+    WHERE Menu_ID='$menuID'";
 
         $result = mysqli_query($con, $sql);
 
         if ($result) {
-            header("Location: /project/Module2/homefoodvendor.php");
+            header("Location: /WebProject/Module2/homefoodvendor.php");
             exit();
         } else {
             echo "Error updating menu item: " . mysqli_error($con);
