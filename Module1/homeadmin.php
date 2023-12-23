@@ -186,8 +186,7 @@ if ($stmt->rowCount() > 0) {
         echo '<td class="cell">' . $row['Username'] . '</td>';
         
         $foodImageFilePath = $row['FoodImage'];
-        echo '<td class="cell"><img src="\WebProject\Module2\uploads' . $row['FoodImage'] . '" alt="Food Image" style="width: 50px; height: 50px;"></td>'; 
-
+        echo '<td class="cell"><img src="\WebProject\Module2' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>'; 
         echo '<td class="cell">' . ($row['Sunday'] ? 'yes' : '') . '</td>';
         echo '<td class="cell">' . ($row['Monday'] ? 'yes' : '') . '</td>';
         echo '<td class="cell">' . ($row['Tuesday'] ? 'yes' : '') . '</td>';

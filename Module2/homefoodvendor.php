@@ -131,7 +131,7 @@ if (!isset($_SESSION['id'])) {
             
                 // Handle file upload
                 if (isset($_FILES['foodimage']) && $_FILES['foodimage']['error'] === UPLOAD_ERR_OK) {
-                    $uploadDir = 'uploads/';
+                    $uploadDir = '\\uploads\\';
                     $uploadFile = $uploadDir . basename($_FILES['foodimage']['name']);
             
                     if (!file_exists($uploadDir)) {
@@ -185,40 +185,52 @@ if (!isset($_SESSION['id'])) {
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Output the menu in an HTML table with edit and delete buttons
-        echo '<table class="table">';
-        echo '<tr class="header"><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th>';
-        echo '<th>FoodStatus</th><th>Username</th><th>FoodImage</th><th>Sunday</th><th>Monday</th><th>Tuesday</th>';
-        echo '<th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
 
-        foreach ($result as $row) {
-            echo '<tr class="row">';
-            echo '<td class="cell">' . $row['Menu_ID'] . '</td>';
-            echo '<td class="cell">' . $row['Foodname'] . '</td>';
-            echo '<td class="cell">' . $row['FoodQuantity'] . '</td>';
-            echo '<td class="cell">' . $row['FoodDescription'] . '</td>';
-            echo '<td class="cell">' . $row['FoodStatus'] . '</td>';
-            echo '<td class="cell">' . $row['Username'] . '</td>';
-            echo '<td class="cell"><img src="' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
-            echo '<td class="cell">' . ($row['Sunday'] ? 'yes' : '') . '</td>';
-            echo '<td class="cell">' . ($row['Monday'] ? 'yes' : '') . '</td>';
-            echo '<td class="cell">' . ($row['Tuesday'] ? 'yes' : '') . '</td>';
-            echo '<td class="cell">' . ($row['Wednesday'] ? 'yes' : '') . '</td>';
-            echo '<td class="cell">' . ($row['Thursday'] ? 'yes' : '') . '</td>';
-            echo '<td class="cell">' . ($row['Friday'] ? 'yes' : '') . '</td>';
-            echo '<td class="cell">' . ($row['Saturday'] ? 'yes' : '') . '</td>';
-            echo '<td class="buttonClass">';
-            echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-            echo '<input type="hidden" name="menu_id" value="' . $row['Menu_ID'] . '">';
-            echo '<input type="submit" name="edit" value="Edit" class="buttonClass">';
-            echo '<input type="submit" name="delete" value="Delete" class="buttonClass">';
-            echo '</form>';
-            echo '</td>';
-            echo '</tr>';
+        if (empty($result)) {
+            echo '<table class="table">';
+            echo '<tr class="header"><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th>';
+            echo '<th>FoodStatus</th><th>Username</th><th>FoodImage</th><th>Sunday</th><th>Monday</th><th>Tuesday</th>';
+            echo '<th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
+            echo '<tr><td colspan="16">No menu items found.</td></tr>';
+        } else {
+            // Output the menu in an HTML table with edit and delete buttons
+            echo '<table class="table">';
+            echo '<tr class="header"><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th>';
+            echo '<th>FoodStatus</th><th>Username</th><th>FoodImage</th><th>Sunday</th><th>Monday</th><th>Tuesday</th>';
+            echo '<th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
+        
+            foreach ($result as $row) {
+                echo '<tr class="row">';
+                echo '<td class="cell">' . $row['Menu_ID'] . '</td>';
+                echo '<td class="cell">' . $row['Foodname'] . '</td>';
+                echo '<td class="cell">' . $row['FoodQuantity'] . '</td>';
+                echo '<td class="cell">' . $row['FoodDescription'] . '</td>';
+                echo '<td class="cell">' . $row['FoodStatus'] . '</td>';
+                echo '<td class="cell">' . $row['Username'] . '</td>';
+                echo '<td class="cell"><img src="\WebProject\Module2' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
+                echo '<td class="cell">' . ($row['Sunday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . ($row['Monday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . ($row['Tuesday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . ($row['Wednesday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . ($row['Thursday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . ($row['Friday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . ($row['Saturday'] ? 'yes' : '') . '</td>';
+                echo '<td class="buttonClass">';
+                echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
+                echo '<input type="hidden" name="menu_id" value="' . $row['Menu_ID'] . '">';
+                echo '<input type="submit" name="edit" value="Edit" class="buttonClass">';
+                echo '<input type="submit" name="delete" value="Delete" class="buttonClass">';
+                echo '</form>';
+                echo '</td>';
+                echo '</tr>';
+            }
+        
+            echo '</table>';
         }
 
-        echo '</table>';
+        
         echo '<table class="form-table-container">';
+        echo '<hr>';
         echo '<h2 style="text-align: center;font-weight: bold ;font-size: 30px;">Add New Menu Item</h2>';
         echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" enctype="multipart/form-data" class="form-table">';
         echo '<tr><td>Menu_ID:</td><td><input type="text" name="menu_id" required></td></tr>';

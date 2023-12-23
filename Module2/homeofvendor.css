@@ -129,8 +129,6 @@ button, select {
    
 }
 
-
-
 nav{
     background:linear-gradient(#ee4d2d,#ff7337);;
     width: 100%;
@@ -260,11 +258,13 @@ nav ul li a{
 /***TableMenu***/
 .table {
     width: 80%; /* Adjust the width as needed */
-    margin:  auto; 
+    margin: auto;
+    margin-top: 20px; /* Add this line to adjust the margin-top */
     border-collapse: collapse;
     font-size: 18px;
-    margin-bottom: 20px;
-} 
+    margin-bottom: 5px;
+}
+
 
 
 .table th,
@@ -292,7 +292,7 @@ nav ul li a{
 /***ADDMENU***/
 .form-title{
     text-align: center;
-;
+    margin-top: 30px;
 }
 
 .centered-container {
