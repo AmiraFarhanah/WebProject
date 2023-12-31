@@ -7,10 +7,10 @@
         exit();
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['menu_id'])) {
-        $menuID = $_GET['menu_id'];
+    if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['ID'])) {
+        $menuID = $_GET['ID'];
 
-        $query = mysqli_query($con, "SELECT * FROM menu WHERE Menu_ID='$menuID'");
+        $query = mysqli_query($con, "SELECT * FROM menu WHERE ID='$menuID'");
         $menuItem = mysqli_fetch_assoc($query);
 
         // Display the form for editing
@@ -91,32 +91,19 @@
     </div>
         <h2 class="text">Edit Menu Item</h2>
         <form class="edit-form" method="post" action="/WebProject/Module2/updateMenu.php" enctype="multipart/form-data">
-    <input type="hidden" name="menu_id" value="<?php echo $menuItem['Menu_ID']; ?>">
+    <input type="hidden" name="ID" value="<?php echo $menuItem['ID']; ?>">
     <label for="foodname">Foodname:</label>
     <input type="text" name="foodname" id="foodname" class="form-input" value="<?php echo $menuItem['Foodname']; ?>" required><br>
-
-    <label for="foodquantity">FoodQuantity:</label>
-    <input type="number" name="foodquantity" id="foodquantity" class="form-input" value="<?php echo $menuItem['FoodQuantity']; ?>" required><br>
 
     <label for="fooddescription">FoodDescription:</label>
     <textarea name="fooddescription" id="fooddescription" class="form-input" required><?php echo $menuItem['FoodDescription']; ?></textarea><br>
 
-    <label for="foodstatus">FoodStatus:</label>
-    <input type="text" name="foodstatus" id="foodstatus" class="form-input" value="<?php echo $menuItem['FoodStatus']; ?>" required><br>
+    <label for="FoodPrice">FoodPrice:</label>
+    <input type="text" name="FoodPrice" id="FoodPrice" class="form-input" value="<?php echo $menuItem['FoodPrice']; ?>" required><br>
 
     <!-- Add input for updating the image -->
     <label for="new_foodimage">New FoodImage:</label>
     <input type="file" name="new_foodimage" id="new_foodimage" class="form-input" accept="image/*"><br>
-
-    <label for="available_days">Available Days:</label><br>
-<input type="checkbox" name="Sunday" value="1" <?php if ($menuItem['Sunday'] == 1) echo 'checked'; ?>> Sunday
-<input type="checkbox" name="Monday" value="1" <?php if ($menuItem['Monday'] == 1) echo 'checked'; ?>> Monday
-<input type="checkbox" name="Tuesday" value="1" <?php if ($menuItem['Tuesday'] == 1) echo 'checked'; ?>> Tuesday
-<input type="checkbox" name="Wednesday" value="1" <?php if ($menuItem['Wednesday'] == 1) echo 'checked'; ?>> Wednesday
-<input type="checkbox" name="Thursday" value="1" <?php if ($menuItem['Thursday'] == 1) echo 'checked'; ?>> Thursday
-<input type="checkbox" name="Friday" value="1" <?php if ($menuItem['Friday'] == 1) echo 'checked'; ?>> Friday
-<input type="checkbox" name="Saturday" value="1" <?php if ($menuItem['Saturday'] == 1) echo 'checked'; ?>> Saturday
-<br>              
 
 
     <input type="submit" name="update" class="submit-button" value="Update Menu">

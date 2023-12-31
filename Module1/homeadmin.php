@@ -170,8 +170,8 @@ try {
     // Output the menu in an HTML table with edit and delete buttons
     echo '<table class="table">'; // Add the "table" class to the table
     echo '<tr class="header">'; // Add the "header" class to the header row
-    echo '<th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th><th>FoodStatus</th><th>Username</th><th>Food Image</th>';
-    echo '<th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
+    echo '<th>Menu_ID</th><th>Foodname</th><th>FoodDescription</th><th>Username</th><th>Food Image</th>';
+    echo '<th>QRCode</th><th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
 
     // Check if any rows were returned
     // Check if any rows were returned
@@ -180,13 +180,16 @@ if ($stmt->rowCount() > 0) {
         echo '<tr class="row">'; // Add the "row" class to each data row
         echo '<td class="cell">' . $row['Menu_ID'] . '</td>';
         echo '<td class="cell">' . $row['Foodname'] . '</td>';
-        echo '<td class="cell">' . $row['FoodQuantity'] . '</td>';
         echo '<td class="cell">' . $row['FoodDescription'] . '</td>';
-        echo '<td class="cell">' . $row['FoodStatus'] . '</td>';
+        
         echo '<td class="cell">' . $row['Username'] . '</td>';
         
         $foodImageFilePath = $row['FoodImage'];
-        echo '<td class="cell"><img src="\WebProject\Module2' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>'; 
+        echo '<td class="cell"><img src="\WebProject\Module2' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
+        
+        $qrCodePath = $row['Qrcode'];
+        echo '<td class="cell"><img src="\WebProject\Module2' . $row['Qrcode'] . '" alt="Qr Code" style="max-width: 100px; max-height: 100px;"></td>';
+        
         echo '<td class="cell">' . ($row['Sunday'] ? 'yes' : '') . '</td>';
         echo '<td class="cell">' . ($row['Monday'] ? 'yes' : '') . '</td>';
         echo '<td class="cell">' . ($row['Tuesday'] ? 'yes' : '') . '</td>';

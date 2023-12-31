@@ -36,7 +36,7 @@
                                 $_SESSION['id']=$row['ID'];
 
                                 if(isset($_SESSION['valid'])){
-                                    header("Location: home.php");
+                                    header("Location: /WebProject/Module3/home.php");
                                     exit();
                                 
                                 }
@@ -71,8 +71,6 @@
                                 
                                 }
 
-                       
-                    
 
                         }
 

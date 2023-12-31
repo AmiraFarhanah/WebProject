@@ -1,6 +1,8 @@
 <?php
 session_start();
 include("../config.php");
+include 'phpqrcode/qrlib.php';
+
 if (!isset($_SESSION['id'])) {
     header("Location: /WebProject/Module1/login.php");
     exit();
@@ -26,8 +28,8 @@ if (!isset($_SESSION['id'])) {
             <a href="/WebProject/Module2/homefoodvendor.php" class="/WebProject/Module1/logo"></a>
             <ul>
                 <li><a href="homefoodvendor.php">Home</a></li>
-                <li><a href="#">Order List</a></li>
-                <li><a href="#">Dashboard</a></li>
+                <li><a href="Dailymenu.php">Daily Menu</a></li>
+                <li><a href="Orderlist.php">Order List</a></li>
             </ul>
             <img src="/WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
             <div class="sub-menu-wrap" id="subMenu">
@@ -45,7 +47,7 @@ if (!isset($_SESSION['id'])) {
                             $res_name = $result['Name'];
                             echo "<h3>$res_name</h3>";
                         } else {
-                            echo "<h3>No Name Found</h3>"; // or handle the case where the name is not found
+                            echo "<h3>No Name Found</h3>"; 
                         }
                         ?>
                     </div>
@@ -84,89 +86,81 @@ if (!isset($_SESSION['id'])) {
     </div>
 
     <?php
-    // Database connection parameters
+    
     $servername = "localhost";
     $username = "root";
-    $password = ""; // If using the default root user with no password
+    $password = ""; 
     $dbname = "project";
 
     try {
-        // Create a PDO connection
+        
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Check if the form is submitted for editing or adding a menu item
+        
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['edit'])) {
-                // Redirect to editmenu.php for editing
-                header("Location: editmenu.php?menu_id=" . $_POST['menu_id']);
+                
+                header("Location: editmenu.php?ID=" . $_POST['ID']);
                 exit();
             } elseif (isset($_POST['delete'])) {
-                // Handle deleting menu item (delete from the database)
-                $menuIDToDelete = $_POST['menu_id'];
-                $sql = "DELETE FROM menu WHERE Menu_ID = :menuID";
-                $stmt = $conn->prepare($sql);
+               
+                $menuIDToDelete = $_POST['ID'];
+                $deleteSql = "DELETE FROM menu WHERE ID = :menuID";
+                $stmt = $conn->prepare($deleteSql);
                 $stmt->bindParam(':menuID', $menuIDToDelete, PDO::PARAM_STR);
                 $stmt->execute();
 
-                // Redirect to refresh the page after deletion
+               
                 header("Location: {$_SERVER['PHP_SELF']}");
                 exit();
             } elseif (isset($_POST['add'])) {
-                // Handle adding a new menu item (insert into the database)
-                $menuID = isset($_POST['menu_id']) ? $_POST['menu_id'] : null;
+                
+                
                 $foodname = isset($_POST['foodname']) ? $_POST['foodname'] : null;
                 $foodquantity = isset($_POST['foodquantity']) ? $_POST['foodquantity'] : null;
                 $fooddescription = isset($_POST['fooddescription']) ? $_POST['fooddescription'] : null;
                 $foodstatus = isset($_POST['foodstatus']) ? $_POST['foodstatus'] : null;
-            
-                // Process checkboxes for each day
-                $sunday = isset($_POST['sunday']) ? 1 : 0;
-                $monday = isset($_POST['monday']) ? 1 : 0;
-                $tuesday = isset($_POST['tuesday']) ? 1 : 0;
-                $wednesday = isset($_POST['wednesday']) ? 1 : 0;
-                $thursday = isset($_POST['thursday']) ? 1 : 0;
-                $friday = isset($_POST['friday']) ? 1 : 0;
-                $saturday = isset($_POST['saturday']) ? 1 : 0;
-            
+                $foodprice = isset($_POST['FoodPrice']) ? $_POST['FoodPrice'] : null;
+                
+
                 // Handle file upload
                 if (isset($_FILES['foodimage']) && $_FILES['foodimage']['error'] === UPLOAD_ERR_OK) {
-                    $uploadDir = '\\uploads\\';
+                    $uploadDir = "uploads";
                     $uploadFile = $uploadDir . basename($_FILES['foodimage']['name']);
-            
+
                     if (!file_exists($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
-            
+
                     $uploadFile = $uploadDir . basename($_FILES['foodimage']['name']);
-            
+
                     if (move_uploaded_file($_FILES['foodimage']['tmp_name'], $uploadFile)) {
                         $foodImageFilePath = $uploadFile;
-            
-                        $sql = "INSERT INTO menu (Menu_ID, Foodname, FoodQuantity, FoodDescription, FoodStatus, Username, 
-                                FoodImage, Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday) 
-                                VALUES (:menuID, :foodname, :foodquantity, :fooddescription, :foodstatus, :Username, 
-                                :foodImage, :sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday)";
-            
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(':menuID', $menuID, PDO::PARAM_STR);
+
+                        //QRCODE
+                        $qrCodeData = "Food Name: $foodname\nDescription: $fooddescription";
+                        $qrCodePath = "uploads\qrcodes\{$menuID}_qrcode.png";  // Adjust the path as needed
+
+                        QRcode::png($qrCodeData, $qrCodePath, QR_ECLEVEL_L, 5);
+
+                        $insertSql = "INSERT INTO menu (ID, Foodname, FoodDescription,  Username, 
+                        FoodImage,FoodPrice , Qrcode) 
+                        VALUES (:menuID, :foodname, :fooddescription,  :Username, 
+                        :foodImage, :FoodPrice, :qrcode)";
+
+                        $stmt = $conn->prepare($insertSql);
                         $stmt->bindParam(':foodname', $foodname, PDO::PARAM_STR);
-                        $stmt->bindParam(':foodquantity', $foodquantity, PDO::PARAM_INT);
                         $stmt->bindParam(':fooddescription', $fooddescription, PDO::PARAM_STR);
-                        $stmt->bindParam(':foodstatus', $foodstatus, PDO::PARAM_STR);
                         $stmt->bindParam(':Username', $res_username, PDO::PARAM_STR);
+                        $stmt->bindParam(':FoodPrice', $foodprice, PDO::PARAM_STR);
                         $stmt->bindParam(':foodImage', $foodImageFilePath, PDO::PARAM_STR);
-                        $stmt->bindParam(':sunday', $sunday, PDO::PARAM_INT);
-                        $stmt->bindParam(':monday', $monday, PDO::PARAM_INT);
-                        $stmt->bindParam(':tuesday', $tuesday, PDO::PARAM_INT);
-                        $stmt->bindParam(':wednesday', $wednesday, PDO::PARAM_INT);
-                        $stmt->bindParam(':thursday', $thursday, PDO::PARAM_INT);
-                        $stmt->bindParam(':friday', $friday, PDO::PARAM_INT);
-                        $stmt->bindParam(':saturday', $saturday, PDO::PARAM_INT);
-            
+                        $stmt->bindParam(':qrcode', $qrCodePath, PDO::PARAM_STR);
+
+                        
                         $stmt->execute();
-            
-                        // Redirect to refresh the page after addition
+
+                        
                         header("Location: {$_SERVER['PHP_SELF']}");
                         exit();
                     } else {
@@ -174,78 +168,57 @@ if (!isset($_SESSION['id'])) {
                     }
                 }
             }
-            
         }
 
-        // Fetch the menu items for display
+        //menu display
         $vendorID = $res_username;
-        $sql = "SELECT * FROM menu WHERE Username = :Username";
-        $stmt = $conn->prepare($sql);
+        $selectSql = "SELECT * FROM menu WHERE Username = :Username";
+        $stmt = $conn->prepare($selectSql);
         $stmt->bindParam(':Username', $res_username, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
         if (empty($result)) {
             echo '<table class="table">';
-            echo '<tr class="header"><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th>';
-            echo '<th>FoodStatus</th><th>Username</th><th>FoodImage</th><th>Sunday</th><th>Monday</th><th>Tuesday</th>';
-            echo '<th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
+            echo '<tr class="header"><th>Foodname</th><th>FoodDescription</th>';
+            echo '<th>FoodImage</th><th>FoodPrice</th><th>QR Code</th>';
+            echo '<th>Actions</th></tr>';
             echo '<tr><td colspan="16">No menu items found.</td></tr>';
         } else {
-            // Output the menu in an HTML table with edit and delete buttons
+            // Output menu 
             echo '<table class="table">';
-            echo '<tr class="header"><th>Menu_ID</th><th>Foodname</th><th>FoodQuantity</th><th>FoodDescription</th>';
-            echo '<th>FoodStatus</th><th>Username</th><th>FoodImage</th><th>Sunday</th><th>Monday</th><th>Tuesday</th>';
-            echo '<th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
-        
+            echo '<tr class="header"><th>Foodname</th><th>FoodDescription</th>';
+            echo '<th>FoodPrice</th><th>QR Code</th><th>Food Image</th>';
+            echo '<th>Actions</th></tr>';
+
             foreach ($result as $row) {
                 echo '<tr class="row">';
-                echo '<td class="cell">' . $row['Menu_ID'] . '</td>';
                 echo '<td class="cell">' . $row['Foodname'] . '</td>';
-                echo '<td class="cell">' . $row['FoodQuantity'] . '</td>';
                 echo '<td class="cell">' . $row['FoodDescription'] . '</td>';
-                echo '<td class="cell">' . $row['FoodStatus'] . '</td>';
-                echo '<td class="cell">' . $row['Username'] . '</td>';
-                echo '<td class="cell"><img src="\WebProject\Module2' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
-                echo '<td class="cell">' . ($row['Sunday'] ? 'yes' : '') . '</td>';
-                echo '<td class="cell">' . ($row['Monday'] ? 'yes' : '') . '</td>';
-                echo '<td class="cell">' . ($row['Tuesday'] ? 'yes' : '') . '</td>';
-                echo '<td class="cell">' . ($row['Wednesday'] ? 'yes' : '') . '</td>';
-                echo '<td class="cell">' . ($row['Thursday'] ? 'yes' : '') . '</td>';
-                echo '<td class="cell">' . ($row['Friday'] ? 'yes' : '') . '</td>';
-                echo '<td class="cell">' . ($row['Saturday'] ? 'yes' : '') . '</td>';
+                echo '<td class="cell">' . $row['FoodPrice'] . '</td>';
+                echo '<td class="cell"><img src="' . $row['Qrcode'] . '" alt="QR Code" style="max-width: 100px; max-height: 100px;"></td>';
+                echo '<td class="cell"><img src="' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
                 echo '<td class="buttonClass">';
                 echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-                echo '<input type="hidden" name="menu_id" value="' . $row['Menu_ID'] . '">';
+                echo '<input type="hidden" name="ID" value="' . $row['ID'] . '">';
                 echo '<input type="submit" name="edit" value="Edit" class="buttonClass">';
                 echo '<input type="submit" name="delete" value="Delete" class="buttonClass">';
                 echo '</form>';
                 echo '</td>';
                 echo '</tr>';
             }
-        
+
             echo '</table>';
         }
-
         
         echo '<table class="form-table-container">';
         echo '<hr>';
         echo '<h2 style="text-align: center;font-weight: bold ;font-size: 30px;">Add New Menu Item</h2>';
         echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" enctype="multipart/form-data" class="form-table">';
-        echo '<tr><td>Menu_ID:</td><td><input type="text" name="menu_id" required></td></tr>';
         echo '<tr><td>Foodname:</td><td><input type="text" name="foodname" required></td></tr>';
-        echo '<tr><td>FoodQuantity:</td><td><input type="number" name="foodquantity" required></td></tr>';
         echo '<tr><td>FoodDescription:</td><td><textarea name="fooddescription" required></textarea></td></tr>';
-        echo '<tr><td>FoodStatus:</td><td><input type="text" name="foodstatus" required></td></tr>';
+        echo '<tr><td>FoodPrice:</td><td><input type="text" name="FoodPrice" required></td></tr>';
         echo '<tr><td>FoodImage:</td><td><input type="file" name="foodimage" accept="image/*"></td></tr>';
-        echo '<tr><td>Sunday:</td><td><input type="checkbox" name="sunday"></td></tr>';
-        echo '<tr><td>Monday:</td><td><input type="checkbox" name="monday"></td></tr>';
-        echo '<tr><td>Tuesday:</td><td><input type="checkbox" name="tuesday"></td></tr>';
-        echo '<tr><td>Wednesday:</td><td><input type="checkbox" name="wednesday"></td></tr>';
-        echo '<tr><td>Thursday:</td><td><input type="checkbox" name="thursday"></td></tr>';
-        echo '<tr><td>Friday:</td><td><input type="checkbox" name="friday"></td></tr>';
-        echo '<tr><td>Saturday:</td><td><input type="checkbox" name="saturday"></td></tr>';
         echo '<tr><td><input type="hidden" name="vendor_id" value="' . $vendorID . '"></td></tr>';
         echo '<tr><td colspan="2" style="text-align: center;"><input type="submit" name="add" value="Add Menu"></td></tr>';
         echo '</form>';

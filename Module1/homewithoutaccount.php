@@ -19,9 +19,6 @@
         <nav>
             <a href="homewithoutaccount.php" class="logo"></a>
             
-          
-                    
-
             
             <ul>
                 <li><a href="#">Home</a></li>
