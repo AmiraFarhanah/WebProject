@@ -1,7 +1,6 @@
 <?php
 session_start();
 include("../config.php");
-include 'phpqrcode/qrlib.php';
 
 if (!isset($_SESSION['id'])) {
     header("Location: /WebProject/Module1/login.php");
@@ -15,7 +14,6 @@ if (!isset($_SESSION['id'])) {
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Food Vendor</title>
     <link rel="stylesheet" href="\WebProject\Module2\homeofvendor.css">
@@ -30,6 +28,7 @@ if (!isset($_SESSION['id'])) {
                 <li><a href="homefoodvendor.php">Home</a></li>
                 <li><a href="Dailymenu.php">Daily Menu</a></li>
                 <li><a href="Orderlist.php">Order List</a></li>
+                <li><a href="Dashboard.php">Dashboard</a></li>
             </ul>
             <img src="/WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
             <div class="sub-menu-wrap" id="subMenu">
@@ -97,32 +96,27 @@ if (!isset($_SESSION['id'])) {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        
+        $id = $_SESSION['id'];
+
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['edit'])) {
-                
                 header("Location: editmenu.php?ID=" . $_POST['ID']);
                 exit();
             } elseif (isset($_POST['delete'])) {
-               
                 $menuIDToDelete = $_POST['ID'];
                 $deleteSql = "DELETE FROM menu WHERE ID = :menuID";
                 $stmt = $conn->prepare($deleteSql);
                 $stmt->bindParam(':menuID', $menuIDToDelete, PDO::PARAM_STR);
                 $stmt->execute();
-
-               
                 header("Location: {$_SERVER['PHP_SELF']}");
                 exit();
             } elseif (isset($_POST['add'])) {
-                
-                
+                $vendor_ID = isset($_POST['vendor_id']) ? $_POST['vendor_id'] : null;
                 $foodname = isset($_POST['foodname']) ? $_POST['foodname'] : null;
                 $foodquantity = isset($_POST['foodquantity']) ? $_POST['foodquantity'] : null;
                 $fooddescription = isset($_POST['fooddescription']) ? $_POST['fooddescription'] : null;
                 $foodstatus = isset($_POST['foodstatus']) ? $_POST['foodstatus'] : null;
                 $foodprice = isset($_POST['FoodPrice']) ? $_POST['FoodPrice'] : null;
-                
 
                 // Handle file upload
                 if (isset($_FILES['foodimage']) && $_FILES['foodimage']['error'] === UPLOAD_ERR_OK) {
@@ -138,29 +132,27 @@ if (!isset($_SESSION['id'])) {
                     if (move_uploaded_file($_FILES['foodimage']['tmp_name'], $uploadFile)) {
                         $foodImageFilePath = $uploadFile;
 
-                        //QRCODE
+                        // QR Code generation using Google Charts API
                         $qrCodeData = "Food Name: $foodname\nDescription: $fooddescription";
-                        $qrCodePath = "uploads\qrcodes\{$menuID}_qrcode.png";  // Adjust the path as needed
+                        $qrCodeAPI = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" . urlencode($qrCodeData);
+                        $qrCodePath = "uploads/qrcodes/{$foodname}.png";
+                        file_put_contents($qrCodePath, file_get_contents($qrCodeAPI));
 
-                        QRcode::png($qrCodeData, $qrCodePath, QR_ECLEVEL_L, 5);
-
-                        $insertSql = "INSERT INTO menu (ID, Foodname, FoodDescription,  Username, 
-                        FoodImage,FoodPrice , Qrcode) 
-                        VALUES (:menuID, :foodname, :fooddescription,  :Username, 
-                        :foodImage, :FoodPrice, :qrcode)";
+                        $insertSql = "INSERT INTO menu (Foodname, FoodDescription,  Username, FoodImage, FoodPrice, Qrcode, vendor_ID) 
+                        VALUES (:foodname, :fooddescription, :Username, :foodImage, :FoodPrice, :Qrcode, :vendor_ID)";
 
                         $stmt = $conn->prepare($insertSql);
+                        $stmt->bindParam(':vendor_ID', $vendor_ID, PDO::PARAM_INT);
                         $stmt->bindParam(':foodname', $foodname, PDO::PARAM_STR);
                         $stmt->bindParam(':fooddescription', $fooddescription, PDO::PARAM_STR);
                         $stmt->bindParam(':Username', $res_username, PDO::PARAM_STR);
                         $stmt->bindParam(':FoodPrice', $foodprice, PDO::PARAM_STR);
                         $stmt->bindParam(':foodImage', $foodImageFilePath, PDO::PARAM_STR);
-                        $stmt->bindParam(':qrcode', $qrCodePath, PDO::PARAM_STR);
+                        $stmt->bindParam(':Qrcode', $qrCodePath, PDO::PARAM_STR);
 
-                        
+
                         $stmt->execute();
 
-                        
                         header("Location: {$_SERVER['PHP_SELF']}");
                         exit();
                     } else {
@@ -170,13 +162,18 @@ if (!isset($_SESSION['id'])) {
             }
         }
 
-        //menu display
-        $vendorID = $res_username;
-        $selectSql = "SELECT * FROM menu WHERE Username = :Username";
-        $stmt = $conn->prepare($selectSql);
-        $stmt->bindParam(':Username', $res_username, PDO::PARAM_STR);
+        $id = $_SESSION['id'];
+        $selectSql = "SELECT `menu`.*,food_vendor.Username
+        FROM `menu`
+        INNER JOIN food_vendor ON `menu`.`vendor_ID` = food_vendor.ID
+        WHERE `menu`.vendor_ID =:id";
+        
+        $stmt = $conn->prepare($selectSql); // Initialize $stmt here
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        
 
         if (empty($result)) {
             echo '<table class="table">';
@@ -219,10 +216,11 @@ if (!isset($_SESSION['id'])) {
         echo '<tr><td>FoodDescription:</td><td><textarea name="fooddescription" required></textarea></td></tr>';
         echo '<tr><td>FoodPrice:</td><td><input type="text" name="FoodPrice" required></td></tr>';
         echo '<tr><td>FoodImage:</td><td><input type="file" name="foodimage" accept="image/*"></td></tr>';
-        echo '<tr><td><input type="hidden" name="vendor_id" value="' . $vendorID . '"></td></tr>';
+        echo '<tr><td><input type="hidden" name="vendor_id" value="' . $id . '"></td></tr>';
         echo '<tr><td colspan="2" style="text-align: center;"><input type="submit" name="add" value="Add Menu"></td></tr>';
         echo '</form>';
         echo '</table>';
+        
 
     } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();

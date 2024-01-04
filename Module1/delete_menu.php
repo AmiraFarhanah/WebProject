@@ -8,20 +8,30 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-// Check if the Menu_ID parameter is set in the URL
-if (isset($_GET['Menu_ID'])) {
-    $menuID = $_GET['Menu_ID'];
+// Check if the ID parameter is set in the URL
+if (isset($_GET['ID'])) {
+    $menuID = $_GET['ID'];
 
-    // Prepare and execute the delete query
-    $deleteQuery = mysqli_query($con, "DELETE FROM menu WHERE Menu_ID = '$menuID'");
-    
-    // Check if the delete query was successful
-    if ($deleteQuery) {
+    // Disable foreign key checks
+    $con->query('SET foreign_key_checks = 0');
+
+    // Prepare and bind the delete query
+    $deleteQuery = $con->prepare("DELETE FROM menu WHERE ID = ?");
+    $deleteQuery->bind_param("s", $menuID);
+
+    // Execute the delete query
+    if ($deleteQuery->execute()) {
         header("Location: /WebProject/Module1/homeadmin.php");
     } else {
-        echo "Error deleting menu item: " . mysqli_error($con);
+        echo "Error deleting menu item: " . $deleteQuery->error;
     }
+
+    // Close the prepared statement
+    $deleteQuery->close();
+
+    // Enable foreign key checks
+    $con->query('SET foreign_key_checks = 1');
 } else {
-    echo "Invalid request. Menu_ID not specified.";
+    echo "Invalid request. ID not specified.";
 }
 ?>

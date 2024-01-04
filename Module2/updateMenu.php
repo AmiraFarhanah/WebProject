@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
         $sql = "UPDATE menu SET 
             Foodname='$foodname', 
             FoodDescription='$fooddescription', 
-            FoodPrice='$FoodPrice' 
+            FoodPrice='$FoodPrice'
             WHERE ID='$menuID'";
 
         $result = mysqli_query($con, $sql);

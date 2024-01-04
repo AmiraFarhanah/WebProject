@@ -170,34 +170,25 @@ try {
     // Output the menu in an HTML table with edit and delete buttons
     echo '<table class="table">'; // Add the "table" class to the table
     echo '<tr class="header">'; // Add the "header" class to the header row
-    echo '<th>Menu_ID</th><th>Foodname</th><th>FoodDescription</th><th>Username</th><th>Food Image</th>';
-    echo '<th>QRCode</th><th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Actions</th></tr>';
+    echo '<th>Foodname</th><th>FoodDescription</th><th>Username</th><th>Food Image</th>';
+    echo '<th>QRCode</th><th>Actions</th></tr>';
 
     // Check if any rows were returned
     // Check if any rows were returned
 if ($stmt->rowCount() > 0) {
     foreach ($result as $row) {
         echo '<tr class="row">'; // Add the "row" class to each data row
-        echo '<td class="cell">' . $row['Menu_ID'] . '</td>';
         echo '<td class="cell">' . $row['Foodname'] . '</td>';
         echo '<td class="cell">' . $row['FoodDescription'] . '</td>';
         
         echo '<td class="cell">' . $row['Username'] . '</td>';
         
         $foodImageFilePath = $row['FoodImage'];
-        echo '<td class="cell"><img src="\WebProject\Module2' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
+        echo '<td class="cell"><img src="\WebProject\Module2\\' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
         
         $qrCodePath = $row['Qrcode'];
-        echo '<td class="cell"><img src="\WebProject\Module2' . $row['Qrcode'] . '" alt="Qr Code" style="max-width: 100px; max-height: 100px;"></td>';
-        
-        echo '<td class="cell">' . ($row['Sunday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell">' . ($row['Monday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell">' . ($row['Tuesday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell">' . ($row['Wednesday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell">' . ($row['Thursday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell">' . ($row['Friday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell">' . ($row['Saturday'] ? 'yes' : '') . '</td>';
-        echo '<td class="cell"><button onclick="deleteMenu(\''. $row['Menu_ID'] .'\')">Delete</button></td>';
+        echo '<td class="cell"><img src="\WebProject\Module2\\' . $row['Qrcode'] . '" alt="Qr Code" style="max-width: 100px; max-height: 100px;"></td>';
+        echo '<td class="cell"><button onclick="deleteMenu(\''. $row['ID'] .'\')">Delete</button></td>';
         echo '</form>';
         echo '</td>';
         echo '</tr>';
@@ -231,7 +222,7 @@ $conn = null;
 
     function deleteMenu(menuID) {
             if (confirm("Are you sure you want to delete this menu item?")) {
-                window.location.href = 'delete_menu.php?Menu_ID=' + menuID;
+                window.location.href = 'delete_menu.php?ID=' + menuID;
             }
         }
 

@@ -27,9 +27,11 @@ if (!isset($_SESSION['id'])) {
         <nav>
             <a href="/WebProject/Module2/homefoodvendor.php" class="/WebProject/Module1/logo"></a>
             <ul>
-                <li><a href="homefoodvendor.php">Home</a></li>
+            <li>
+                <a href="homefoodvendor.php">Home</a></li>
                 <li><a href="Dailymenu.php">Daily Menu</a></li>
                 <li><a href="Orderlist.php">Order List</a></li>
+                <li><a href="Dashboard.php">Dashboard</a></li>
             </ul>
             <img src="/WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
             <div class="sub-menu-wrap" id="subMenu">
@@ -86,80 +88,59 @@ if (!isset($_SESSION['id'])) {
     </div>
 
     <?php
- 
- $servername = "localhost";
- $username = "root";
- $password = ""; 
- $dbname = "project";
+        $servername = "localhost";
+        $username = "root";
+        $password = ""; 
+        $dbname = "project";
+        
+        $con = mysqli_connect($servername, $username, $password, $dbname);
+        
+        if (!$con) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+        
+        $query = mysqli_prepare($con, "SELECT * FROM menu WHERE vendor_ID=?");
 
+if ($query) {
+    mysqli_stmt_bind_param($query, "i", $vendorID); // Assuming vendor_ID is an integer, adjust accordingly
+    $vendorID = $_SESSION['id'];
+    mysqli_stmt_execute($query);
+    $result = mysqli_stmt_get_result($query);
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo '<div class="card">';
+        echo '<div class="card__body">';
+        $foodImageFilePath = $row['FoodImage'];
+        $imagePath = "\WebProject\Module2\\" . $foodImageFilePath;
+        $imageWidth = 150; // Set your desired width
+        $imageHeight = 150; // Set your desired height
+        echo '<div class="card__body-cover-image foodimage">';
+        echo '<img src="\WebProject\Module2\\' . $foodImageFilePath . '" alt="Food Image">';
+        echo '</div>';
+        echo '<h3 class="card__body-header-title">' . $row['Foodname'] . '</h3>';
+        echo '<p class="card__body-quantity">Available Set: ' . $row['FoodQuantity'] . '</p>';
+        echo '<form method="post" action="update_food_status.php">';
+        echo '<input type="hidden" name="menuID" value="' . $row['ID'] . '">';
+        echo '<label for="quantity">Quantity:</label>';
+        echo '<input type="number" name="quantity" value="' . $row['FoodQuantity'] . '">';
+        echo '<label for="availability">Availability:</label>';
+        echo '<select name="availability">';
+        echo '<option value="1" ' . ($row['FoodStatus'] == 1 ? 'selected' : '') . '>Available</option>';
+        echo '<option value="0" ' . ($row['FoodStatus'] == 0 ? 'selected' : '') . '>Not Available</option>';
+        echo '</select>';
+        echo '<button type="submit" class="card__body-order-button">Update</button>';
+        echo '</form>';
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve values from the form
-    $menuId = $_POST["ID"];
-    $foodQuantity = $_POST["food_quantity"];
-    $availability = isset($_POST["availability"]) ? 1 : 0; // 1 for available, 0 for not available
-
-    // Update the database with food availability
-    $sql = "UPDATE menu SET FoodQuantity = ?, FoodStatus = ? WHERE ID = ?";
-    $stmt = $conn->prepare($sql);
-
-    if (!$stmt) {
-        die("Error in SQL statement: " . $conn->error);
+        echo '</div>';
+        echo '</div>';
     }
 
-    $stmt->bind_param("iii", $foodQuantity, $availability, $menuId);
-    $stmt->execute();
-    $stmt->close();
-}
-
-// Display all food names and pictures
-$sql = "SELECT ID, Foodname, FoodImage, FoodQuantity, FoodStatus FROM menu WHERE Vendor_ID = $id";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $menuId = $row["ID"];
-        $foodname = $row["Foodname"];
-        $foodImage = $row["FoodImage"];
-        $foodQuantity = $row["FoodQuantity"];
-        $foodStatus = $row["FoodStatus"];
-
-        // Display food details
-        echo "<div>";
-        echo "<h2>$foodname</h2>";
-        echo "<img src='$foodImage' alt='$foodname' style='max-width: 200px;'><br>";
-        echo "<p>Quantity: $foodQuantity</p>";
-
-        // Display availability checkbox for food vendor
-        echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
-        echo "<input type='hidden' name='ID' value='$menuId'>";
-        echo "<label for='food_quantity'>Update Quantity:</label>";
-        echo "<input type='number' name='food_quantity' value='$foodQuantity' required><br>";
-        echo "<select name='availability'>";
-        echo "<option value='1'" . ($foodStatus == 1 ? " selected" : "") . ">Available</option>";
-        echo "<option value='0'" . ($foodStatus == 0 ? " selected" : "") . ">Not Available</option>";
-        echo "</select><br>";
-        echo "<input type='submit' value='Update'>";
-        echo "</form>";
-
-        echo "</div><hr>";
-    }
+    mysqli_stmt_close($query);
 } else {
-    echo "No food items found.";
+    die("Query preparation failed: " . mysqli_error($con));
 }
 
-// Close the database connection
-$conn->close();
-?>
+    ?>
 
 
     <script>

@@ -18,7 +18,7 @@ if (!isset($_SESSION['id'])) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Food Vendor</title>
-    <link rel="stylesheet" href="\WebProject\Module2\homeofvendor.css">
+    <link rel="stylesheet" href="\WebProject\Module2\orderlist.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
@@ -30,6 +30,7 @@ if (!isset($_SESSION['id'])) {
                 <li><a href="homefoodvendor.php">Home</a></li>
                 <li><a href="Dailymenu.php">Daily Menu</a></li>
                 <li><a href="Orderlist.php">Order List</a></li>
+                <li><a href="Dashboard.php">Dashboard</a></li>
             </ul>
             <img src="/WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
             <div class="sub-menu-wrap" id="subMenu">
@@ -84,61 +85,72 @@ if (!isset($_SESSION['id'])) {
             </div>
         </nav>
     </div>
+
     
     <?php
-// Assuming you have a database connection established
-$servername = "localhost";
-$username = "root";
-$password = ""; 
-$dbname = "project";
+    // Assuming you have a database connection established
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "project";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
 
-// Function to update order status using prepared statement
-function updateOrderStatus($orderId, $newStatus) {
-    global $conn;
-    
-    // Use prepared statement to prevent SQL injection
-    $stmt = $conn->prepare("UPDATE `order` SET Orderstatus=? WHERE Order_ID=?");
-    $stmt->bind_param("si", $newStatus, $orderId);
+    // Function to update order status using prepared statement
+    function updateOrderStatus($orderId, $newStatus)
+    {
+        global $conn;
+
+        // Use prepared statement to prevent SQL injection
+        $stmt = $conn->prepare("UPDATE `order` SET Orderstatus=? WHERE Order_ID=?");
+        $stmt->bind_param("si", $newStatus, $orderId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Set the parameter value
+$id = $_SESSION['id'];
+
+// Prepare and bind the statement with the parameter
+$stmt = $conn->prepare("SELECT `order`.Order_ID, `order`.Orderdate, `order`.Ordertime, `order`.Orderstatus, menu.Foodname, menu.FoodImage, registered_user.Name 
+FROM `order` 
+INNER JOIN menu ON `order`.Menu_ID = menu.ID 
+INNER JOIN registered_user ON `order`.Register_ID = registered_user.ID 
+WHERE `order`.`vendor_ID` = ?;");
+$stmt->bind_param("i", $id);
+
+
+    // Execute the statement
     $stmt->execute();
-    $stmt->close();
-}
 
+    // Get the result
+    $result = $stmt->get_result();
 
-
-$sql = "SELECT * FROM `order` WHERE Vendor_ID = $id";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    echo "<table border='1'>
+    if ($result->num_rows > 0) {
+        echo "<table border='1'>
             <tr>
                 <th>Order ID</th>
-                <th>Order Date</th>的
+                <th>Order Date</th>
                 <th>Order Time</th>
                 <th>Order Status</th>
-                <th>Point</th>
                 <th>Name</th>
                 <th>Foodname</th>
                 <th>Action</th>
             </tr>";
 
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
                 <td>{$row['Order_ID']}</td>
                 <td>{$row['Orderdate']}</td>
                 <td>{$row['Ordertime']}</td>
                 <td>{$row['Orderstatus']}</td>
-                <td>{$row['Point']}</td>
                 <td>{$row['Name']}</td>
                 <td>{$row['Foodname']}</td>
-                <td>";
-        echo "</td>
                 <td>
                     <form method='post'>
                         <input type='hidden' name='orderId' value='{$row['Order_ID']}' />
@@ -149,28 +161,31 @@ if ($result->num_rows > 0) {
                         <input type='submit' name='updateStatus' value='Update' />
                     </form>
                 </td>
-            </tr>";
+                </tr>";
+        }
+
+        echo "</table>";
+
+        // Handle order status update
+        if (isset($_POST['updateStatus'])) {
+            $orderId = $_POST['orderId'];
+            $newStatus = $_POST['newStatus'];
+            updateOrderStatus($orderId, $newStatus);
+            header("Location: orderlist.php"); // Redirect to refresh the page
+            exit(); // Ensure no further code execution after redirection
+        }
+    } else {
+        echo "0 results";
     }
 
-    echo "</table>";
+    $stmt->close();
+    $conn->close();
+    ?>
 
-    // Handle order status update
-if (isset($_POST['updateStatus'])) {
-    $orderId = $_POST['orderId'];
-    $newStatus = $_POST['newStatus'];
-    updateOrderStatus($orderId, $newStatus);
-    header("Location: orderlist.php"); // Redirect to refresh the page
-}
-
-} else {
-    echo "0 results";
-}
-
-$conn->close();
-?>
-
-
-
+    <!-- Add a refresh button -->
+    <form method="post">
+        <input type="submit" name="refreshButton" value="Refresh">
+    </form>
 
     <script>
         let subMenu = document.getElementById("subMenu");
@@ -181,5 +196,5 @@ $conn->close();
     </script>
 
 </body>
-
 </html>
+
