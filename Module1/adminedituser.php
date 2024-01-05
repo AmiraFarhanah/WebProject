@@ -20,11 +20,11 @@
 <body>
     <div class="hero">
         <nav>
-            <a href="homefoodvendor.php" class="logo"></a>
+            <a href="homeadmin.php" class="logo"></a>
             
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Feature</a></li>
+                <li><a href="admindashboard.php">Dashboard</a></li>
+                <li><a href="Userlist.php">User list</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
@@ -39,7 +39,7 @@
                         
                         
                         $res_name=null;
-                        $query= mysqli_query($con, "SELECT * FROM food_vendor where ID='$id'");
+                        $query= mysqli_query($con, "SELECT * FROM administrator where ID='$id'");
                         if (!$query) {
                             die("Query failed: " . mysqli_error($con));
                         }
@@ -52,13 +52,14 @@
                             echo "<h3>No Name Found</h3>"; // or handle the case where the name is not found
                         }
                         
-                    ?>
+                    
+    ?>
 
 
                     </div>
                     <hr>
                     
-                    <a href="editvendor.php" class="sub-menu-link">
+                    <a href="editadmin.php" class="sub-menu-link">
                         <img src="./icon/edit.png"  >
                         <p>Edit Profile</p>
                         <span>></span>
@@ -91,6 +92,11 @@
     <div class="kotak form-kotak">
 
         <?php
+           
+            if (isset($_GET['ID'])){
+                $ID = $_GET['ID'];
+            }
+
             if(isset($_POST['submit'])){
                 $name=$_POST['name'];
                 $username=$_POST['username'];
@@ -99,19 +105,50 @@
                 $phonenumber=$_POST['phonenumber'];
                 $email=$_POST['email'];
                 $id=$_SESSION['id'];
+                
                 $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
 
-                $edit_query=mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
+                $verify_query1=mysqli_query($con, "SELECT Username FROM registered_user WHERE Username= '$username' AND ID!='$ID' ");
+                
+                if(mysqli_num_rows($verify_query1)!=0){
+                    echo "<div class='message'>
+                        <p>This username has been used, Try another one!</p>
+                        </div><br>";
+
+                    echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
+
+                }
+                else{
+                    $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID='$ID'") or die("error occurred");
                 if($edit_query){
                     echo "<div class='message'>
-                    <pUpdate successfully!</p>
+                    <p>Update successfully!</p>
                     </div><br>";
-                    echo "<a href='homefoodvendor.php'><button class='btn'>Go Home</button>";
+                    echo "<a href='Userlist.php'><button class='btn'>Go Back</button>";
                 }
 
+                }
+                
+
+                
+
             }else{
-                $id=$_SESSION['id'];
-                $query=mysqli_query($con, "SELECT * FROM food_vendor WHERE ID='$id'");
+                if (isset($_GET['username'])){
+                    $username = $_GET['username'];
+                    if (isset($_GET['usergroup'])){
+                        $usergroup = $_GET['usergroup'];
+                        if (isset($_GET['ID'])){
+                            $ID = $_GET['ID'];
+                        }
+                        
+                    }
+
+                }
+                if($usergroup=="Normal User"){
+                
+                   $selectQuery = "SELECT * FROM registered_user WHERE Username = '$username'";
+                   $query=mysqli_query($con, $selectQuery);
+                
 
                 while($result= mysqli_fetch_assoc($query)){
                     $res_name=$result['Name'];
@@ -122,6 +159,7 @@
                     $res_email=$result['Email'];
                     
                 }
+            }
             
         ?>
         <header>Edit Profile</header>
@@ -132,7 +170,7 @@
             </div>
             <div class="field input">
                 <label for="username">Username</label>
-                <input type="text" name="username" id="username" value="<?php echo $res_username?>" placeholder="   Username.." required>
+                <input type="text" name="username" id="username" value="<?php echo $res_username?>" placeholder="   Username.." required >
             </div>
 
             <div class="field input">
@@ -167,7 +205,6 @@
     </div>
     <?php }?>
 </div>
-
 
 </body>
 </html>
