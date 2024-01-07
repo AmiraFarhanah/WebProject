@@ -229,8 +229,11 @@ foreach ($data as $row) {
             <td>" . $row['Email'] . "</td>
             <td>" . $row['Usergroup'] . "</td>
             <td>" . $row['Qrcode'] . "</td>
-            <td><button  class='styled-button' onclick='deleteRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\")'>Delete</button></td>            
-          </tr>";
+            <td><button  class='styled-button' style='margin-bottom: 5px;' onclick='deleteRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\")'>Delete</button>
+            <br>            
+            <button class='styled-button'  style='width: 100%;' onclick='editRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\" , \"" . $row['ID'] . "\")'>Edit</button></td>
+
+            </tr>";
 }
 
 echo "</table>
@@ -239,6 +242,24 @@ echo "</table>
    
    ?>
 <script>
+
+    function editRow(username, usergroup, ID) {
+            if (usergroup=="Food Vendor"){
+                // Perform an AJAX request or redirect to a delete script
+                // For simplicity, I'll redirect to a delete script with the ID as a parameter
+                window.location.href = "admineditvendor.php?username=" + username + "&usergroup=" + usergroup+ "&ID=" + ID;
+            }
+            else if (usergroup=="Normal User"){
+                // Perform an AJAX request or redirect to a delete script
+                // For simplicity, I'll redirect to a delete script with the ID as a parameter
+                window.location.href = "adminedituser.php?username=" + username + "&usergroup=" + usergroup+ "&ID=" + ID;
+            }
+            else if (usergroup=="Administrator"){
+                // Perform an AJAX request or redirect to a delete script
+                // For simplicity, I'll redirect to a delete script with the ID as a parameter
+                window.location.href = "admineditadmin.php?username=" + username + "&usergroup=" + usergroup+ "&ID=" + ID;
+            }
+        }
 
     function deleteRow(username, usergroup) {
             if (confirm("Are you sure you want to delete user " + username + " with User group " + usergroup + "?")){
