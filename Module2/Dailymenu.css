@@ -9,7 +9,6 @@
 
 body{
     background:#fbe3e8;
-    
 }
 
 .container{
@@ -129,8 +128,6 @@ button, select {
     min-height: 30vh;
    
 }
-
-
 
 nav{
     background:linear-gradient(#ee4d2d,#ff7337);;
@@ -258,71 +255,61 @@ nav ul li a{
     font-weight: 600;
 }
 
-div {
-    text-align: center;
-}
-
-/* Style for the Menu heading */
-h2 {
-    color: #333;
-    font-size: 24px;
-}
-
-/* Style for each food item container */
-div {
-    display: inline-block;
+.card {
+    width: 300px;
     margin: 20px;
-    padding: 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
+    overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
 }
 
-/* Style for food image */
-img {
-    max-width: 100%;
-    height: auto;
+.card__body {
+    padding: 20px;
+}
+
+.card__body-cover-image {
+    overflow: hidden;
     border-radius: 8px;
 }
 
-/* Style for food name */
-h3 {
-    color: #555;
-    font-size: 20px;
-    margin-top: 10px;
+.card__body img {
+    width: 100%;
+    height: auto;
 }
 
-/* Style for food description */
-p {
-    color: #777;
+.card__body-header-title {
+    font-size: 1.5em;
     margin: 10px 0;
 }
 
-/* Style for food quantity */
-p {
-    font-weight: bold;
+.card__body-quantity {
+    color: #777;
 }
 
-/* Style for food price */
-p {
-    color: #e44d26; /* Orange color for price */
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Style for the order button */
-button {
-    background-color: #4caf50; /* Green color for button */
-    color: #fff;
-    padding: 10px 20px;
+.card__body-order-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
 }
 
-/* Hover effect for the order button */
-button:hover {
-    background-color: #45a049;
+/* Style for form elements */
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="number"],
+select {
+    padding: 8px;
+    margin-bottom: 10px;
 }

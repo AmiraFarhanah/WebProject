@@ -88,7 +88,6 @@ if (!isset($_SESSION['id'])) {
 
     
     <?php
-    // Assuming you have a database connection established
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -96,27 +95,27 @@ if (!isset($_SESSION['id'])) {
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
+    
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Function to update order status using prepared statement
+    
     function updateOrderStatus($orderId, $newStatus)
     {
         global $conn;
 
-        // Use prepared statement to prevent SQL injection
+        
         $stmt = $conn->prepare("UPDATE `order` SET Orderstatus=? WHERE Order_ID=?");
         $stmt->bind_param("si", $newStatus, $orderId);
         $stmt->execute();
         $stmt->close();
     }
 
-    // Set the parameter value
+    
 $id = $_SESSION['id'];
 
-// Prepare and bind the statement with the parameter
+
 $stmt = $conn->prepare("SELECT `order`.Order_ID, `order`.Orderdate, `order`.Ordertime, `order`.Orderstatus, menu.Foodname, menu.FoodImage, registered_user.Name 
 FROM `order` 
 INNER JOIN menu ON `order`.Menu_ID = menu.ID 
@@ -125,10 +124,9 @@ WHERE `order`.`vendor_ID` = ?;");
 $stmt->bind_param("i", $id);
 
 
-    // Execute the statement
+
     $stmt->execute();
 
-    // Get the result
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
@@ -166,13 +164,13 @@ $stmt->bind_param("i", $id);
 
         echo "</table>";
 
-        // Handle order status update
+        
         if (isset($_POST['updateStatus'])) {
             $orderId = $_POST['orderId'];
             $newStatus = $_POST['newStatus'];
             updateOrderStatus($orderId, $newStatus);
-            header("Location: orderlist.php"); // Redirect to refresh the page
-            exit(); // Ensure no further code execution after redirection
+            header("Location: orderlist.php"); 
+            exit(); 
         }
     } else {
         echo "0 results";
@@ -182,7 +180,7 @@ $stmt->bind_param("i", $id);
     $conn->close();
     ?>
 
-    <!-- Add a refresh button -->
+    
     <form method="post">
         <input type="submit" name="refreshButton" value="Refresh">
     </form>
