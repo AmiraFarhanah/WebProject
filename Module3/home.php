@@ -125,24 +125,27 @@
         
         $query = mysqli_query($con, "SELECT * FROM menu WHERE FoodStatus = 1");
         
+        echo '<div class="menu-container">';
         echo '<h2>Menu</h2>';
         
         while ($row = mysqli_fetch_assoc($query)) {
-            echo '<div class="card">'; 
-            echo '<div class="card__body">';
-            $foodImageFilePath = $row['FoodImage'];
-            echo '<div class="card__body-cover-image foodimage">'; 
-            echo '<img src="\WebProject\Module2\\' . $foodImageFilePath . '" alt="Food Image">';
-            echo '</div>';
-            echo '<h3 class="card__body-header-title">' . $row['Foodname'] . '</h3>'; 
-            echo '<p class="card__body-description">' . $row['FoodDescription'] . '</p>'; 
-            echo '<p class="card__body-quantity">Available Set: ' . $row['FoodQuantity'] . '</p>';
-            echo '<p class="card__body-quantity">RM ' . $row['FoodPrice'] . '</p>';
+            echo '<div class="food-item">';
+            echo '<div class="item-container">';
+            echo '<div class="image-container">';
             
-            // No Function Need to ADD URSELF
-            echo '<button class="card__body-order-button" onclick="orderFood">Order</button>';
-            echo '</div>'; 
-            echo '</div>'; 
+            $foodImageFilePath = $row['FoodImage'];
+            echo '<img src="\WebProject\Module2\\' . $foodImageFilePath . '" alt="Food Image">';
+            
+            echo '</div>';
+            echo '<h3>' . $row['Foodname'] . '</h3>';
+            echo '<p class="description">' . $row['FoodDescription'] . '</p>';
+            echo '<p class="quantity">Available Set: ' . $row['FoodQuantity'] . '</p>';
+            echo '<p class="price">RM ' . $row['FoodPrice'] . '</p>';
+            
+            echo '<button class="card__order-button" onclick="orderFood()">Order</button>';
+            
+            echo '</div>';
+            echo '</div>';
         }
         
         echo '</div>';

@@ -18,7 +18,7 @@ if (!isset($_SESSION['id'])) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Food Vendor</title>
-    <link rel="stylesheet" href="\WebProject\Module2\homeofvendor.css">
+    <link rel="stylesheet" href="\WebProject\Module2\Dailymenu.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
@@ -112,8 +112,8 @@ if ($query) {
         echo '<div class="card__body">';
         $foodImageFilePath = $row['FoodImage'];
         $imagePath = "\WebProject\Module2\\" . $foodImageFilePath;
-        $imageWidth = 150; // Set your desired width
-        $imageHeight = 150; // Set your desired height
+        $imageWidth = 150; 
+        $imageHeight = 150; 
         echo '<div class="card__body-cover-image foodimage">';
         echo '<img src="\WebProject\Module2\\' . $foodImageFilePath . '" alt="Food Image">';
         echo '</div>';
@@ -130,7 +130,6 @@ if ($query) {
         echo '</select>';
         echo '<button type="submit" class="card__body-order-button">Update</button>';
         echo '</form>';
-
         echo '</div>';
         echo '</div>';
     }

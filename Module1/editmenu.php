@@ -1,11 +1,25 @@
 <?php
-    session_start();
-    include("config.php");
-    if(!isset($_SESSION['id'])){
-        header("Location: login.php");
-    }
-    
+session_start();
+include("config.php");
+
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+}
+
+// Add any necessary database connection code if not already included in 'config.php'
+
+if (isset($_GET['id'])) {
+    $menuId = $_GET['id'];
+
+    // Fetch the menu item details from the database using the $menuId
+    $query = mysqli_query($con, "SELECT * FROM menu WHERE ID='$menuId'");
+    $menuDetails = mysqli_fetch_assoc($query);
+} else {
+    // Handle the case where 'id' is not set in the URL
+    // Redirect or display an error message as needed
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +28,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home admin</title>
-    <link rel="stylesheet" href="homeadmin.css">
+    <link rel="stylesheet" href="editmenu.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
@@ -121,109 +135,25 @@
             
         </nav>
     </div>
+    
+    <form action="update_menu.php" method="post">
+        <input type="hidden" name="menu_id" value="<?php echo $menuDetails['ID']; ?>">
 
-    <?php
+       
+        <label for="food_name">Food Name:</label>
+        <input type="text" id="food_name" name="food_name" value="<?php echo $menuDetails['Foodname']; ?>" required>
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+        <label for="food_description">Food Description:</label>
+        <textarea id="food_description" name="food_description" required><?php echo $menuDetails['FoodDescription']; ?></textarea>
 
-$servername = "localhost";
-$username = "root";
-$password = ""; 
-$dbname = "project";
+        <label for="FoodPrice">FoodPrice:</label>
+        <textarea id="Food_Price" name="Food_Price" required><?php echo $menuDetails['FoodPrice']; ?></textarea>
 
-try {
-
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-
-
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
-    function isAdministrator() {
-
-        return true; 
-    }
-
-    if (isAdministrator()) {
-        $sql = "SELECT * FROM menu";
-        $stmt = $conn->prepare($sql);
-    } else {
-        $vendorID = $res_username;
-        $sql = "SELECT * FROM menu WHERE Username = :Username";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':Username', $res_username, PDO::PARAM_STR);
-    }
-
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-   
-    echo '<table class="table">'; 
-    echo '<tr class="header">'; 
-    echo '<th>Foodname</th><th>FoodDescription</th><th>Username</th>';
-    echo '<th>FoodPrice</th><th>Food Image</th><th>QRCode</th><th>Actions</th></tr>';
-
-if ($stmt->rowCount() > 0) {
-    foreach ($result as $row) {
-        echo '<tr class="row">'; // Add the "row" class to each data row
-        echo '<td class="cell">' . $row['Foodname'] . '</td>';
-        echo '<td class="cell">' . $row['FoodDescription'] . '</td>';
-        echo '<td class="cell">' . $row['Username'] . '</td>';
-        echo '<td class="cell">' . $row['FoodPrice'] . '</td>';
-        $foodImageFilePath = $row['FoodImage'];
-        echo '<td class="cell"><img src="\WebProject\Module2\\' . $row['FoodImage'] . '" alt="Food Image" style="max-width: 100px; max-height: 100px;"></td>';
-        $qrCodePath = $row['Qrcode'];
-        echo '<td class="cell"><img src="\WebProject\Module2\\' . $row['Qrcode'] . '" alt="Qr Code" style="max-width: 100px; max-height: 100px;"></td>';
-        echo '<td class="cell">
-        <button onclick="editMenu(\'' . $row['ID'] . '\')">Edit</button>
-        <button onclick="deleteMenu(\'' . $row['ID'] . '\')">Delete</button></td>';
-        echo '</form>';
-        echo '</td>';
-        echo '</tr>';
-    }
-   
+        <label for="new_foodimage">New Food Image:</label>
+        <input type="file" name="new_foodimage" id="new_foodimage" class="form-input" accept="image/*"><br>
 
 
-} else {
-    echo '<tr><td colspan="16">No menu items found.</td></tr>';
-}
-
-
-    echo '</table>';
-
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
-
-// Close the connection
-$conn = null;
-?>
-              
-
-
-<script>
-    let subMenu=document.getElementById("subMenu");
-
-    function toggleMenu(){
-        subMenu.classList.toggle("open-menu");
-    }
-
-    function deleteMenu(menuID) {
-            if (confirm("Are you sure you want to delete this menu item?")) {
-                window.location.href = 'delete_menu.php?ID=' + menuID;
-            }
-        }
-
-    function editMenu(id) {
-    window.location.href = '/WebProject/Module1/editmenu.php?id=' + id;
-    }
-</script>
-
-
-</script>
-
+        <input type="submit" value="Save Changes">
+    </form>
 </body>
-
-
 </html>
