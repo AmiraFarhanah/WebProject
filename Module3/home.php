@@ -14,20 +14,21 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Registered User</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="/WebProject/Module1/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <div class="hero">
         <nav>
-            <a href="home.php" class="logo"></a>
+            <a href="/WebProject/Module3/home.php" class="logo"></a>
             
           
-        
+                    
+
             
             <ul>
                 <li><a href="/WebProject/Module3/home.php">Home</a></li>
-                <li><a href="/WebProject/Module3/Orderlist.php">Orderlist</a></li>
+                <li><a href="#">Feature</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
@@ -49,11 +50,12 @@
                             die("Query failed: " . mysqli_error($con));
                         }
                     
+                        // Check if there are any results
                         if ($result = mysqli_fetch_assoc($query)) {
                             $res_name = $result['Name'];
                             echo "<h3>$res_name</h3>";
                         } else {
-                            echo "<h3>No Name Found</h3>"; 
+                            echo "<h3>No Name Found</h3>"; // or handle the case where the name is not found
                         }
                         
                     
@@ -112,52 +114,59 @@
     </div>
 
     <?php
-        $servername = "localhost";
-        $username = "root";
-        $password = ""; 
-        $dbname = "project";
-        
-        $con = mysqli_connect($servername, $username, $password, $dbname);
-        
-        if (!$con) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-        
-        $query = mysqli_query($con, "SELECT * FROM menu WHERE FoodStatus = 1");
-        
-        echo '<div class="menu-container">';
-        echo '<h2>Menu</h2>';
-        
-        while ($row = mysqli_fetch_assoc($query)) {
-            echo '<div class="food-item">';
-            echo '<div class="item-container">';
-            echo '<div class="image-container">';
-            
-            $foodImageFilePath = $row['FoodImage'];
-            echo '<img src="\WebProject\Module2\\' . $foodImageFilePath . '" alt="Food Image">';
-            
-            echo '</div>';
-            echo '<h3>' . $row['Foodname'] . '</h3>';
-            echo '<p class="description">' . $row['FoodDescription'] . '</p>';
-            echo '<p class="quantity">Available Set: ' . $row['FoodQuantity'] . '</p>';
-            echo '<p class="price">RM ' . $row['FoodPrice'] . '</p>';
-            
-            echo '<button class="card__order-button" onclick="orderFood()">Order</button>';
-            
-            echo '</div>';
-            echo '</div>';
-        }
-        
-        echo '</div>';
-    ?>
-    
-    <script>
-        let subMenu = document.getElementById("subMenu");
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "project";
 
-        function toggleMenu() {
-            subMenu.classList.toggle("open-menu");
-        }
-    </script>
+$con = mysqli_connect($servername, $username, $password, $dbname);
+
+if (!$con) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$query = mysqli_query($con, "SELECT * FROM menu WHERE FoodStatus = 1");
+
+echo '<style>';
+echo 'h2 { font-size: 24px; margin-bottom: 20px; }';
+echo '.card { background-color: #fff; border-radius: 10px; padding: 20px; margin: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: center; }';
+echo '.card img { max-width: 100%; border-radius: 5px; margin-bottom: 10px; }';
+echo '.card h3 { margin-top: 10px; font-size: 20px; }';
+echo '.card p { color: #555; margin-bottom: 10px; }';
+echo '.card__order-button { background-color: #333; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-size: 16px; }';
+echo '</style>';
+
+echo '<h2>Menu</h2>';
+
+while ($row = mysqli_fetch_assoc($query)) {
+    $foodImageFilePath = $row['FoodImage'];
+
+    echo '<div class="card">';
+    echo '<img src="\WebProject\Module2\\' . $foodImageFilePath . '" alt="Food Image">';
+    echo '<h3>' . $row['Foodname'] . '</h3>';
+    echo '<p>' . $row['FoodDescription'] . '</p>';
+    echo '<p>Available Set: ' . $row['FoodQuantity'] . '</p>';
+    echo '<p>RM ' . $row['FoodPrice'] . '</p>';
+    echo '<button class="card__order-button" onclick="orderFood()">Order</button>';
+    echo '</div>';
+}
+
+echo '</div>';
+?>
+
+    
+                        
+
+<script>
+    let subMenu=document.getElementById("subMenu");
+
+    function toggleMenu(){
+        subMenu.classList.toggle("open-menu");
+    }
+
+</script>
 
 </body>
+
+
 </html>
