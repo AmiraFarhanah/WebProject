@@ -79,95 +79,99 @@
 
         </nav>
     </div>
-<script>
-    let subMenu=document.getElementById("subMenu");
 
-    function toggleMenu(){
-        subMenu.classList.toggle("open-menu");
-    }
+    <script>
+        let subMenu = document.getElementById("subMenu");
 
-</script>
-<div class="container">
-    <div class="kotak form-kotak">
+        function toggleMenu() {
+            subMenu.classList.toggle("open-menu");
+        }
+    </script>
 
-        <?php
-            if(isset($_POST['submit'])){
-                $name=$_POST['name'];
-                $username=$_POST['username'];
-                $password=$_POST['password'];
-                $address=$_POST['address'];
-                $phonenumber=$_POST['phonenumber'];
-                $email=$_POST['email'];
-                $id=$_SESSION['id'];
-                $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
+    <div class="container">
+        <div class="kotak form-kotak">
+            <?php
+            if (isset($_POST['submit'])) {
+                $name = $_POST['name'];
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $address = $_POST['address'];
+                $phonenumber = $_POST['phonenumber'];
+                $email = $_POST['email'];
+                $id = $_SESSION['id'];
+                $qrcode = '<img src="https://api.qrserver.com/v1/create-qr-code/?data=' . $name . '&size=100x100">';
 
-                $edit_query=mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
-                if($edit_query){
+                $verify_query1 = mysqli_query($con, "SELECT Username FROM food_vendor WHERE Username= '$username' AND ID!='$id' ");
+
+                if (mysqli_num_rows($verify_query1) != 0) {
                     echo "<div class='message'>
-                    <pUpdate successfully!</p>
-                    </div><br>";
-                    echo "<a href='homefoodvendor.php'><button class='btn'>Go Home</button>";
+                        <p>This username has been used, Try another one!</p>
+                        </div><br>";
+
+                    echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
+                }  else {
+                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
+
+                        if ($edit_query) {
+                            header("Location: /WebProject/Module1/homefoodvendor.php");
+                            exit();
+                        } else {
+                            echo "Error updating profile: " . mysqli_error($con);
+                        }
+                    }
+                
+            } else {
+                $id = $_SESSION['id'];
+                $query = mysqli_query($con, "SELECT * FROM food_vendor WHERE ID='$id'");
+
+                while ($result = mysqli_fetch_assoc($query)) {
+                    $res_name = $result['Name'];
+                    $res_username = $result['Username'];
+                    $res_password = $result['Password'];
+                    $res_address = $result['Address'];
+                    $res_phonenumber = $result['Phonenumber'];
+                    $res_email = $result['Email'];
                 }
-
-            }else{
-                $id=$_SESSION['id'];
-                $query=mysqli_query($con, "SELECT * FROM food_vendor WHERE ID='$id'");
-
-                while($result= mysqli_fetch_assoc($query)){
-                    $res_name=$result['Name'];
-                    $res_username=$result['Username'];
-                    $res_password=$result['Password'];
-                    $res_address=$result['Address'];
-                    $res_phonenumber=$result['Phonenumber'];
-                    $res_email=$result['Email'];
+            ?>
+                <header>Edit Profile</header>
+                <form action="" method="post" >
                     
-                }
-            
-        ?>
-        <header>Edit Profile</header>
-        <form action="" method="post">
-            <div class="field input">
-                <label for="Name">Name</label>
-                <input type="text" name="name" id="name" value="<?php echo $res_name?>" placeholder="   Name.." required>
-            </div>
-            <div class="field input">
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" value="<?php echo $res_username?>" placeholder="   Username.." required>
-            </div>
+                    <div class="field input">
+                        <label for="Name">Name</label>
+                        <input type="text" name="name" id="name" value="<?php echo $res_name ?>" placeholder="   Name.." required>
+                    </div>
+                    <div class="field input">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username" value="<?php echo $res_username ?>" placeholder="   Username.." required>
+                    </div>
 
-            <div class="field input">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" value="<?php echo $res_password?>" placeholder="   Password.." required>
-            </div>
+                    <div class="field input">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" value="<?php echo $res_password ?>" placeholder="   Password.." required>
+                    </div>
 
-            <div class="field input">
-                <label for="address">Address</label>
-                <input type="text" name="address" id="address"  value="<?php echo $res_address?>"placeholder="  Address.." required>
-            </div>
+                    <div class="field input">
+                        <label for="address">Address</label>
+                        <input type="text" name="address" id="address" value="<?php echo $res_address ?>" placeholder="  Address.." required>
+                    </div>
 
-            <div class="field input">
-                <label for="phonenumber">Phone Number</label>
-                <input type="text" name="phonenumber" id="phonenumber"  value="<?php echo $res_phonenumber?>" placeholder=" Phone number..." required>
-            </div>
+                    <div class="field input">
+                        <label for="phonenumber">Phone Number</label>
+                        <input type="text" name="phonenumber" id="phonenumber" value="<?php echo $res_phonenumber ?>" placeholder=" Phone number..." required>
+                    </div>
 
-            <div class="field input">
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email"  value="<?php echo $res_email?>" placeholder=" Email..." required>
-            </div>
+                    <div class="field input">
+                        <label for="email">Email</label>
+                        <input type="text" name="email" id="email" value="<?php echo $res_email ?>" placeholder=" Email..." required>
+                    </div>
 
-
-            <div class="field">
-                <input type="submit" name="submit" class="btn" value="Save" required>
-            </div>
-
-            
-
-        </form>
-
+                    <div class="field">
+                        <input type="submit" name="submit" class="btn" value="Save" required>
+                    </div>
+                </form>
+        </div>
     </div>
-    <?php }?>
-</div>
-
-
+<?php } ?>
 </body>
+
 </html>

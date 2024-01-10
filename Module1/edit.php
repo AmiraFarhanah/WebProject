@@ -101,13 +101,31 @@
                 $id=$_SESSION['id'];
                 $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
 
-                $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
-                if($edit_query){
+                
+
+
+                $verify_query1=mysqli_query($con, "SELECT Username FROM registered_user WHERE Username= '$username' AND ID!='$id' ");
+                
+                if(mysqli_num_rows($verify_query1)!=0){
+                    echo "<div class='message'>
+                        <p>This username has been used, Try another one!</p>
+                        </div><br>";
+
+                    echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
+
+                }
+
+                else{
+                    $edit_query=mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
+
+                if ($edit_query){
                     echo "<div class='message'>
                     <p>Update successfully!</p>
                     </div><br>";
-                    echo "<a href='homeadmin.php'><button class='btn'>Go Home</button>";
+                    echo "<a href='home.php'><button class='btn'>Go Home</button>";
                 }
+            }
+
 
             }else{
                 $id=$_SESSION['id'];
