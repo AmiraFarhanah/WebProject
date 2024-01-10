@@ -257,3 +257,43 @@ nav ul li a{
     font-weight: 600;
 }
 
+.file-input-container {
+    position: relative;
+    text-align: center;
+}
+
+.file-input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.fileNameDisplay {
+    display: inline-block;
+    margin-top: 10px;
+
+}
+
+.file-label {
+    display: inline-block;
+    background-color: #1e88e5;
+    color: black;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+.profilepic {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.profilepic img {
+    margin: 0 auto;
+    display: block;
+}
