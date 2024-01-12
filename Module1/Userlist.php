@@ -129,11 +129,173 @@
 
         </nav>
     </div>
+
+    <div class="search-container">
+    <form method="GET" action="Userlist.php">
+        <input type="text" name="search" placeholder="Search by username">
+        <button type="submit">Search</button>
+    </form>
+</div>
+<style>
+    /* Add this CSS for search bar styling */
+    .search-container {
+        text-align: center;
+        margin-bottom: 20px; /* Adjust the margin as needed */
+    }
+
+
+
+    input[type="text"] {
+        padding: 10px;
+        border: none;
+        width: 200px; /* Adjust the width as needed */
+        border-radius: 0;
+        outline: none;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 10px 15px;
+        background-color: #e74c3c;
+        color: #fff;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #c0392b;
+    }
+
+    
+</style>
+
+
     
       
    <?php
+   if (isset($_GET['search'])) {
+    $search=$_GET['search'];
+
+    $queryAdmin = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM administrator 
+    WHERE Username LIKE '%$search%'";
+    $resultAdmin =  mysqli_query($con, $queryAdmin);
+
+    $queryVendor = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM food_vendor 
+    WHERE Username LIKE '%$search%'";
+    $resultVendor = mysqli_query($con, $queryVendor);
+
+    $queryRegisteredUser = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM registered_user 
+    WHERE Username LIKE '%$search%'";
+    $resultRegisteredUser = mysqli_query($con, $queryRegisteredUser);
+    
+    
+    // Display search results in a table
+ 
+    $data = array();
+
+    while ($row = $resultAdmin->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    while ($row = $resultVendor->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    while ($row = $resultRegisteredUser->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    usort($data, function ($a, $b) {
+        return $a['ID'] - $b['ID'];
+    });
+
+
+    echo "<div class='table-container'>
+    <table class='styled-table'>
+        <tr>
+            
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>User group</th>
+            <th>Qrcode</th>
+            <th>Action</th> <!-- New column for delete button -->
+        </tr>";
+
+foreach ($data as $row) {
+    echo "<tr>
+            
+            <td>" . $row['Username'] . "</td>
+            <td>" . $row['Name'] . "</td>
+            <td>" . $row['Email'] . "</td>
+            <td>" . $row['Usergroup'] . "</td>
+            <td>" . $row['Qrcode'] . "</td>
+            <td><button  class='styled-button' style='margin-bottom: 20px;' onclick='deleteRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\")'>Delete</button>
+            <br>            
+            <button class='styled-button'  style='width: 100%;' onclick='editRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\" , \"" . $row['ID'] . "\")'>Edit</button></td>
+
+            </tr>";
+}
+
+echo "</table>
+</div>";
+
+echo "<style>
    
-   
+.table-container {
+    width: 50%;
+    margin: 0;
+    float: left; /* Adjusted to float right */
+    margin-left: 350px; /* Adjusted margin-right to move it slightly to the right */
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 18px;
+    text-align: left;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.styled-table th, .styled-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.styled-table th {
+    background-color: #2c3e50;
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.styled-button {
+    background-color: #e74c3c; /* Red background color */
+    color: #fff; /* White text color */
+    padding: 10px 15px; /* Padding for the button */
+    border: none; /* Remove the button border */
+    border-radius: 5px; /* Add border-radius for rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s; /* Add a smooth transition effect on hover */
+}
+
+.styled-button:hover {
+    background-color: #c0392b; /* Darker red color on hover */
+}
+
+</style>";
+
+            }
+
+   else{
    $queryAdmin = "SELECT ID, Username, Name, Email, Usergroup, Qrcode FROM administrator";
    $resultAdmin = mysqli_query($con, $queryAdmin);
    
@@ -162,6 +324,8 @@
         usort($data, function ($a, $b) {
             return $a['ID'] - $b['ID'];
         });
+
+    
 
         //  Display the sorted data in a table
         echo "<style>
@@ -216,6 +380,7 @@
 
 </style>";
 
+
     
     echo "<div class='table-container'>
     <table class='styled-table'>
@@ -247,7 +412,7 @@ foreach ($data as $row) {
 echo "</table>
 </div>";
 
-   
+}
    ?>
 <script>
 
