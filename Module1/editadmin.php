@@ -66,6 +66,14 @@
 
                     </a>
 
+                    <a href='register.php' class='sub-menu-link'>
+                        <img src='./icon/adduser.png' >
+                        <p>Register User</p>
+                        <span>></span>
+
+                    </a>
+
+
                     <a href="logout.php" class="sub-menu-link">
                         <img src="./icon/logout.png"  >
                         <p>Log Out</p>
@@ -101,6 +109,7 @@
                 $email=$_POST['email'];
                 $id=$_SESSION['id'];
                 $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
+                $image=$_POST['image'];
 
                 $verify_query1=mysqli_query($con, "SELECT Username FROM administrator WHERE Username= '$username' AND ID!='$id' ");
                 
@@ -114,8 +123,8 @@
                 }
 
                 else{
-                    if(isset($_POST['image'])){
-                        $image=$_POST['image'];
+                    if($image!=null){
+                        
                         $edit_query = mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$id") or die("error occurred");
 
                     }

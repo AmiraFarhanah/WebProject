@@ -100,7 +100,7 @@
                 $email=$_POST['email'];
                 $id=$_SESSION['id'];
                 $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
-
+                $image=$_POST['image'];
                 
 
 
@@ -116,8 +116,8 @@
                 }
 
                 else {
-                    if(isset($_POST['image'])){
-                        $image=$_POST['image'];
+                    if($image!=null){
+                        
                         $edit_query = mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$id") or die("error occurred");
 
                     }

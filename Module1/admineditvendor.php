@@ -66,6 +66,13 @@
 
                     </a>
 
+                    <a href='register.php' class='sub-menu-link'>
+                        <img src='./icon/adduser.png' >
+                        <p>Register User</p>
+                        <span>></span>
+
+                    </a>
+
                     <a href="logout.php" class="sub-menu-link">
                         <img src="./icon/logout.png"  >
                         <p>Log Out</p>

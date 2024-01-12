@@ -99,6 +99,7 @@
                 $phonenumber = $_POST['phonenumber'];
                 $email = $_POST['email'];
                 $id = $_SESSION['id'];
+                $image=$_POST['image'];
                 $qrcode = '<img src="https://api.qrserver.com/v1/create-qr-code/?data=' . $name . '&size=100x100">';
 
                 $verify_query1 = mysqli_query($con, "SELECT Username FROM food_vendor WHERE Username= '$username' AND ID!='$id' ");
@@ -110,8 +111,8 @@
 
                     echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
                 }  else {
-                    if(isset($_POST['image'])){
-                        $image=$_POST['image'];
+                    if($image!=null){
+                        
                         $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$id") or die("error occurred");
 
                     }
