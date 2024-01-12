@@ -174,7 +174,7 @@
               else{
             ?>
             <div class="profilepic">
-            <img src="../icon/<?php echo "$res_image"?>" width="100" height="80" >
+            <img src="./icon/<?php echo "$res_image"?>" width="100" height="80" >
             </div>
             <br>
             

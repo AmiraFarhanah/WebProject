@@ -112,6 +112,8 @@
                 $phonenumber=$_POST['phonenumber'];
                 $email=$_POST['email'];
                 $id=$_SESSION['id'];
+                $image=$_POST['image'];
+
                 
                 $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
 
@@ -126,13 +128,22 @@
 
                 }
                 else{
-                    $edit_query=mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID='$ID'") or die("error occurred");
-                if($edit_query){
-                    echo "<div class='message'>
-                    <p>Update successfully!</p>
-                    </div><br>";
-                    echo "<a href='Userlist.php'><button class='btn'>Go Back</button>";
-                }
+                    if($image!=null){
+                        
+                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$ID") or die("error occurred");
+
+                    }
+                    else{
+                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$ID") or die("error occurred");
+
+                    }
+
+                        if ($edit_query) {
+                            header("Location: /WebProject/Module1/homeadmin.php");
+                            exit();
+                        } else {
+                            echo "Error updating profile: " . mysqli_error($con);
+                        }
 
                 }
                 
@@ -164,13 +175,42 @@
                     $res_address=$result['Address'];
                     $res_phonenumber=$result['Phonenumber'];
                     $res_email=$result['Email'];
+                    $res_image=$result['Profilepicture'];
+
                     
                 }
             }
             
         ?>
         <header>Edit Profile</header>
+        <?php
+              if($res_image == null){
+               ?>
+                <div class="no-image">
+                
+                <p1> [No Image Available] </p1>
+
+                <br>
+                <br>
+
+             <?php
+              }
+              else{
+            ?>
+            <div class="profilepic">
+            <img src="./icon/<?php echo "$res_image"?>" width="100" height="80" >
+            </div>
+            <br>
+            
+            <?php
+              }
+            ?>
         <form action="" method="post">
+            <div class="file-input-container">
+                    <input type="file" name="image" id="image" class="file-input">
+                    <span id=fileNameDisplay></span><br><br>
+                    <label for="fileInput" class="file-label">Upload Photo</label>
+                    </div>
             <div class="field input">
                 <label for="Name">Name</label>
                 <input type="text" name="name" id="name" value="<?php echo $res_name?>" placeholder="   Name.." required>

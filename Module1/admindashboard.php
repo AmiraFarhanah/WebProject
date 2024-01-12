@@ -72,9 +72,7 @@
         <nav>
             <a href="homeadmin.php" class="logo"></a>
             
-          
-                    
-
+ 
             
             <ul>
                 <li><a href="admindashboard.php">Dashboard</a></li>
