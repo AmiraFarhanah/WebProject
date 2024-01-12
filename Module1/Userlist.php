@@ -138,11 +138,7 @@
 </div>
 <style>
     /* Add this CSS for search bar styling */
-    .search-container {
-        text-align: center;
-        margin-bottom: 20px; /* Adjust the margin as needed */
-    }
-
+    
 
 
     input[type="text"] {
@@ -233,7 +229,7 @@ foreach ($data as $row) {
             <td>" . $row['Qrcode'] . "</td>
             <td><button  class='styled-button' style='margin-bottom: 20px;' onclick='deleteRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\")'>Delete</button>
             <br>            
-            <button class='styled-button'  style='width: 100%;' onclick='editRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\" , \"" . $row['ID'] . "\")'>Edit</button></td>
+            <button class='styled-button'  style='width: 75%;' onclick='editRow(\"" . $row['Username'] . "\", \"" . $row['Usergroup'] . "\" , \"" . $row['ID'] . "\")'>Edit</button></td>
 
             </tr>";
 }
@@ -243,53 +239,6 @@ echo "</table>
 
 echo "<style>
    
-.table-container {
-    width: 50%;
-    margin: 0;
-    float: left; /* Adjusted to float right */
-    margin-left: 350px; /* Adjusted margin-right to move it slightly to the right */
-}
-
-.styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 18px;
-    text-align: left;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.styled-table th, .styled-table td {
-    padding: 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.styled-table th {
-    background-color: #2c3e50;
-    font-weight: bold;
-    color: #ecf0f1;
-}
-
-.styled-table tbody tr:hover {
-    background-color: #f5f5f5;
-}
-
-.styled-button {
-    background-color: #e74c3c; /* Red background color */
-    color: #fff; /* White text color */
-    padding: 10px 15px; /* Padding for the button */
-    border: none; /* Remove the button border */
-    border-radius: 5px; /* Add border-radius for rounded corners */
-    cursor: pointer; /* Change cursor to pointer on hover */
-    transition: background-color 0.3s; /* Add a smooth transition effect on hover */
-}
-
-.styled-button:hover {
-    background-color: #c0392b; /* Darker red color on hover */
-}
 
 </style>";
 
@@ -330,53 +279,6 @@ echo "<style>
         //  Display the sorted data in a table
         echo "<style>
    
-    .table-container {
-        width: 50%;
-        margin: 0;
-        float: left; /* Adjusted to float right */
-        margin-left: 350px; /* Adjusted margin-right to move it slightly to the right */
-    }
-
-    .styled-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 18px;
-        text-align: left;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .styled-table th, .styled-table td {
-        padding: 15px;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .styled-table th {
-        background-color: #2c3e50;
-        font-weight: bold;
-        color: #ecf0f1;
-    }
-
-    .styled-table tbody tr:hover {
-        background-color: #f5f5f5;
-    }
-
-    .styled-button {
-        background-color: #e74c3c; /* Red background color */
-        color: #fff; /* White text color */
-        padding: 10px 15px; /* Padding for the button */
-        border: none; /* Remove the button border */
-        border-radius: 5px; /* Add border-radius for rounded corners */
-        cursor: pointer; /* Change cursor to pointer on hover */
-        transition: background-color 0.3s; /* Add a smooth transition effect on hover */
-    }
-    
-    .styled-button:hover {
-        background-color: #c0392b; /* Darker red color on hover */
-    }
 
 </style>";
 

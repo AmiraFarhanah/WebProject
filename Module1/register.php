@@ -41,9 +41,12 @@
                 else{
                     
                     mysqli_query($con, "INSERT INTO registered_user (Name, Password, Address, Phonenumber, Username, Usergroup, Email, Qrcode) VALUES ('$name', '$password', '$address', '$phonenumber', '$username', '$usergroup', '$email', '$qrcode')") or die("Error Occured");
+                    echo "<div class='qrcode'>$qrcode</div>";
                     echo "<div class='message'>
                         <p>Registeration successfully!</p>
                         </div><br>";
+                        
+
                     echo "<a href='login.php'><button class='btn'>Login Now</button>";
 
                 }
@@ -63,10 +66,13 @@
                 else{
                     
                     mysqli_query($con, "INSERT INTO food_vendor (Name, Password, Address, Phonenumber, Username, Usergroup, Email, Qrcode) VALUES ('$name', '$password', '$address', '$phonenumber', '$username', '$usergroup', '$email', '$qrcode')") or die("Error Occured");
+                    echo "<div class='qrcode'>$qrcode</div>";
                     echo "<div class='message'>
                         <p>Registeration successfully!</p>
                         </div><br>";
-                    echo "<a href='login.php'><button class='btn'>Login Now</button>";
+                       
+                        echo "<a href='login.php'><button class='btn'>Login Now</button>";
+                    
 
                 }
 
