@@ -23,7 +23,7 @@
             <a href="home.php" class="logo"></a>
             
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="home.php">Home</a></li>
                 <li><a href="#">Feature</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>

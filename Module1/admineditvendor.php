@@ -25,8 +25,7 @@
             <ul>
                 <li><a href="admindashboard.php">Dashboard</a></li>
                 <li><a href="Userlist.php">User list</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="pending.php">Application pending list</a></li>
             </ul>
             <img src="login.png" class="user-pic" onclick="toggleMenu()">
 
