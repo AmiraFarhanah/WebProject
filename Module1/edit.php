@@ -127,7 +127,11 @@
                             echo "Error updating profile: " . mysqli_error($con);
                         }
                     } else {
-                        echo "Error uploading image: " . $_FILES['image']['error'];
+                        $edit_query = mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address='$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("Error occurred");
+                        if ($edit_query) {
+                            header("Location: /WebProject/Module3/home.php");
+                            exit();
+                        }
                     }
                 }
             } else {

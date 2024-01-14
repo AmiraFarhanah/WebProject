@@ -25,6 +25,7 @@
             <ul>
                 <li><a href="admindashboard.php">Dashboard</a></li>
                 <li><a href="Userlist.php">User list</a></li>
+                <li><a href="pending.php">Application pending list</a></li>
                
                
             </ul>
@@ -137,7 +138,11 @@
                             echo "Error updating profile: " . mysqli_error($con);
                         }
                     } else {
-                        echo "Error uploading image.";
+                        $edit_query = mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address='$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("Error occurred");
+                        if ($edit_query) {
+                            header("Location: /WebProject/Module1/homeadmin.php");
+                            exit();
+                        } 
                     }
                 }
             } else {
