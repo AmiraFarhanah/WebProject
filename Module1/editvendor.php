@@ -129,7 +129,13 @@
                             echo "Error updating profile: " . mysqli_error($con);
                         }
                     } else {
-                        echo "Error uploading image.";
+                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address='$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("Error occurred");
+
+                        // Redirect to homeadmin.php if the update is successful
+                        if ($edit_query) {
+                            header("Location: /WebProject/Module2/homefoodvendor.php");
+                            exit();
+                        }
                     }
                 }
             } else {
