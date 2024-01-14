@@ -25,8 +25,8 @@
             <ul>
                 <li><a href="admindashboard.php">Dashboard</a></li>
                 <li><a href="Userlist.php">User list</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+               
+               
             </ul>
             <img src="login.png" class="user-pic" onclick="toggleMenu()">
 
@@ -97,51 +97,63 @@
 
 </script>
 <div class="container">
-    <div class="kotak form-kotak">
+        <div class="kotak form-kotak">
+            <?php
+            if (isset($_POST['submit'])) {
+                // Get form data
+                $name = $_POST['name'];
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $address = $_POST['address'];
+                $phonenumber = $_POST['phonenumber'];
+                $email = $_POST['email'];
+                $id = $_SESSION['id'];
+                $qrcode = '<img src="https://api.qrserver.com/v1/create-qr-code/?data='.$name.'&size=100x100">';
 
-        <?php
-            if(isset($_POST['submit'])){
-                $name=$_POST['name'];
-                $username=$_POST['username'];
-                $password=$_POST['password'];
-                $address=$_POST['address'];
-                $phonenumber=$_POST['phonenumber'];
-                $email=$_POST['email'];
-                $id=$_SESSION['id'];
-                $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
-                $image=$_POST['image'];
+                // Corrected way to handle file upload
+                $image = $_FILES['image'];
+                $image_name = $image['name'];
+                $image_tmp = $image['tmp_name'];
 
-                $verify_query1=mysqli_query($con, "SELECT Username FROM administrator WHERE Username= '$username' AND ID!='$id' ");
-                
-                if(mysqli_num_rows($verify_query1)!=0){
+                // Verify username uniqueness
+                $verify_query1 = mysqli_query($con, "SELECT Username FROM administrator WHERE Username='$username' AND ID!='$id'");
+
+                if (mysqli_num_rows($verify_query1) != 0) {
                     echo "<div class='message'>
-                        <p>This username has been used, Try another one!</p>
-                        </div><br>";
-
+                            <p>This username has been used, try another one!</p>
+                          </div><br>";
                     echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
+                } else {
+                    // Move uploaded image to the 'uploads' directory
+                    if (move_uploaded_file($image_tmp, __DIR__ . '/icon/' . $image_name)) {
+                        // Update database with user profile information
+                        $edit_query = mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address='$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image_name' WHERE ID=$id") or die("Error occurred");
 
-                }
-
-                else{
-                    if($image!=null){
-                        
-                        $edit_query = mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$id") or die("error occurred");
-
-                    }
-                    else{
-                        $edit_query = mysqli_query($con, "UPDATE administrator SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
-
-                    }
-
+                        // Redirect to homeadmin.php if the update is successful
                         if ($edit_query) {
                             header("Location: /WebProject/Module1/homeadmin.php");
                             exit();
                         } else {
                             echo "Error updating profile: " . mysqli_error($con);
                         }
-            }
+                    } else {
+                        echo "Error uploading image.";
+                    }
+                }
+            } else {
+                // Retrieve user information for pre-filled form
+                $id = $_SESSION['id'];
+                $query = mysqli_query($con, "SELECT * FROM administrator WHERE ID='$id'");
 
-            }else{
+                while ($result = mysqli_fetch_assoc($query)) {
+                    $res_name = $result['Name'];
+                    $res_username = $result['Username'];
+                    $res_password = $result['Password'];
+                    $res_address = $result['Address'];
+                    $res_email = $result['Email'];
+                    $res_phonenumber = $result['Phonenumber'];
+                    $res_image = $result['Profilepicture'];
+                }
                 $id=$_SESSION['id'];
                 $query=mysqli_query($con, "SELECT * FROM administrator WHERE ID='$id'");
 
@@ -175,13 +187,14 @@
             ?>
             <div class="profilepic">
             <img src="./icon/<?php echo "$res_image"?>" width="100" height="80" >
+        
             </div>
             <br>
             
             <?php
               }
             ?>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             <div class="file-input-container">
                     <input type="file" name="image" id="image" class="file-input">
                     <span id=fileNameDisplay></span><br><br>

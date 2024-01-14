@@ -1,0 +1,79 @@
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color:rgb(233, 197, 203);
+    
+}
+
+
+
+.qr{
+   height: 260px;
+   background-color: white; 
+   max-width: 410px;
+   border-radius: 7px;
+   padding: 16px 25px;
+   transition: height 0.2 ease;
+}
+
+.qr.active{
+    height: 560px;
+}
+
+header h1{
+    font-size: 21px;
+    
+}
+
+header p{
+    margin-top: 5px;
+    color: rgb(42, 3, 61);
+    font-size: 16px;
+}
+
+.qr .menu{
+
+    margin: 20px 0 25px;
+
+}
+
+.qr :where(input, button){
+    width: 100%;
+    height: 55px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.qr input{
+    font-size: 18px;
+    padding: 0 17px;
+    border: 1px solid black;
+}
+
+.qr button{
+    margin-top: 20px;
+    background-color: rgb(55, 168, 45);
+    cursor: pointer;
+    color: aliceblue;
+}
+
+.qr .qrCode{
+    padding: 33px 0;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    justify-content: center;
+    display: flex;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.qr.active .qrCode{
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.5s 0.5s ease;
+}

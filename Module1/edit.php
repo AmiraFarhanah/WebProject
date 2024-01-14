@@ -88,54 +88,49 @@
 
 </script>
 <div class="container">
-    <div class="kotak form-kotak">
+        <div class="kotak form-kotak">
+            <?php
+            if (isset($_POST['submit'])) {
+                // Get form data
+                $name = $_POST['name'];
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $address = $_POST['address'];
+                $phonenumber = $_POST['phonenumber'];
+                $email = $_POST['email'];
+                $id = $_SESSION['id'];
+                $qrcode = '<img src="https://api.qrserver.com/v1/create-qr-code/?data='.$name.'&size=100x100">';
 
-        <?php
-            if(isset($_POST['submit'])){
-                $name=$_POST['name'];
-                $username=$_POST['username'];
-                $password=$_POST['password'];
-                $address=$_POST['address'];
-                $phonenumber=$_POST['phonenumber'];
-                $email=$_POST['email'];
-                $id=$_SESSION['id'];
-                $qrcode='<img src= "https://api.qrserver.com/v1/create-qr-code/?data='.$name. '&size=100x100">';
-                $image=$_POST['image'];
-                
+                // Corrected way to handle file upload
+                $image = $_FILES['image'];
+                $image_name = $image['name'];
+                $image_tmp = $image['tmp_name'];
 
+                // Verify username uniqueness
+                $verify_query1 = mysqli_query($con, "SELECT Username FROM registered_user WHERE Username='$username' AND ID!='$id'");
 
-                $verify_query1=mysqli_query($con, "SELECT Username FROM registered_user WHERE Username= '$username' AND ID!='$id' ");
-                
-                if(mysqli_num_rows($verify_query1)!=0){
+                if (mysqli_num_rows($verify_query1) != 0) {
                     echo "<div class='message'>
-                        <p>This username has been used, Try another one!</p>
-                        </div><br>";
-
+                            <p>This username has been used, try another one!</p>
+                          </div><br>";
                     echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
-
-                }
-
-                else {
-                    if($image!=null){
-                        
-                        $edit_query = mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$id") or die("error occurred");
-
-                    }
-                    else{
-                        $edit_query = mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
-
-                    }
-
+                } else {
+                    // Move uploaded image to the 'uploads' directory
+                    if (move_uploaded_file($image_tmp, __DIR__ . '/icon/' . $image_name)) {
+                        // Update database with user profile information
+                        $edit_query = mysqli_query($con, "UPDATE registered_user SET Name='$name', Username='$username', Password='$password', Address='$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image_name' WHERE ID=$id") or die("Error occurred");
+                        // Redirect to homeadmin.php if the update is successful
                         if ($edit_query) {
-                            header("Location: /WebProject/Module1/home.php");
+                            header("Location: /WebProject/Module3/home.php");
                             exit();
                         } else {
                             echo "Error updating profile: " . mysqli_error($con);
                         }
-            }
-
-
-            }else{
+                    } else {
+                        echo "Error uploading image: " . $_FILES['image']['error'];
+                    }
+                }
+            } else {
                 $id=$_SESSION['id'];
                 $query=mysqli_query($con, "SELECT * FROM registered_user WHERE ID='$id'");
 
@@ -175,7 +170,7 @@
             <?php
               }
             ?>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             
             <div class="file-input-container">
                     <input type="file" name="image" id="image" class="file-input">

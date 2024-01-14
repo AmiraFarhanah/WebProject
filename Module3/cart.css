@@ -1,0 +1,48 @@
+*    
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+
+    p {text-align: center;}
+    p {text-align: center;}
+    p.a {text-align: right;}
+    p.b {text-align: right;}
+
+}
+
+/*style the container*/
+.container {
+    background-color: rgb(227, 147, 140);
+    color: black;
+    text-align: left;
+    padding: 2px;
+    display: flex;
+    justify-content: left;
+}
+
+
+/*style the container1*/
+
+p {
+    text-align: center;
+  }
+p.a {
+    text-align: right;
+  }
+  
+  p.b {
+    text-align: right;
+  }
+  
+
+
+
+.button {
+    padding: 12px 20px;
+    float: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: aquamarine;
+    color: black;
+  }

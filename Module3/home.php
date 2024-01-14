@@ -1,11 +1,16 @@
 <?php
     session_start();
-    include("../config.php");
+    include("config.php");
     if(!isset($_SESSION['id'])){
         header("Location: ../login.php");
     }
     
+    
+                $select_rows = mysqli_query($con, "SELECT * FROM `menu`") or die ('query failed');
+                $row_count = mysqli_num_rows($select_rows);
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,25 +26,22 @@
     <div class="hero">
         <nav>
             <a href="/WebProject/Module3/home.php" class="logo"></a>
-            
-          
-                    
-
-            
+        
             <ul>
-                <li><a href="/WebProject/Module3/home.php">Home</a></li>
-                <li><a href="#">Feature</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+            <li><a href="/WebProject/Module3/home.php">Home</a></li>
+                <li><a href="Orderlist.php">OrderList</a></li> 
+                <li><a href="/WebProject/Module3/cart1.php" class="cart">cart <span><?php echo $row_count;?></span></a></li>
             </ul>
-            <img src="/WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
+            <div id="menu-btn" class="fas fa-bars"></div>
+            <img src="WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
+
 
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
 
                 
                     <div class="user-info">
-                        <img src="/WebProject/Module1/login.png" style="margin-right: 10px;">
+                        <img src="WebProject/Module1/login.png" style="margin-right: 10px;">
                         <?php
                         $id=$_SESSION['id'];
                         
@@ -112,18 +114,14 @@
 
         </nav>
     </div>
-
+    
+                    
+<div class=container2>
     <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "project";
 
-$con = mysqli_connect($servername, $username, $password, $dbname);
+$con = mysqli_connect("localhost","root","")or die (mysqli_connect_error());
+mysqli_select_db($con,"project")or die(mysqli_error($con));
 
-if (!$con) {
-    die("Connection failed: " . mysqli_connect_error());
-}
 
 $query = mysqli_query($con, "SELECT * FROM menu WHERE FoodStatus = 1");
 
@@ -147,24 +145,70 @@ while ($row = mysqli_fetch_assoc($query)) {
     echo '<p>' . $row['FoodDescription'] . '</p>';
     echo '<p>Available Set: ' . $row['FoodQuantity'] . '</p>';
     echo '<p>RM ' . $row['FoodPrice'] . '</p>';
-    echo '<button class="card__order-button" onclick="orderFood()">Order</button>';
+    // Add a data attribute with the food ID
+    echo '<button class="btn btn-info btn-block addItemBtn" data-foodid="' . $row['ID'] . '"><i class="fas fa-cart-plus"></i>&nbsp;&nbsp;Add to cart</button>';
     echo '</div>';
 }
 
 echo '</div>';
 ?>
+    <?php
 
+        echo '</div>';
     
+
+    echo '</div>';
+?>
+</div>
+  
                         
-
 <script>
-    let subMenu=document.getElementById("subMenu");
+    // Add an event listener to the parent container to handle button clicks
+    document.addEventListener('click', function (event) {
+        // Check if the clicked element has the class 'addItemBtn'
+        if (event.target.classList.contains('addItemBtn')) {
+            // Get the data-foodid attribute value
+            const foodId = event.target.getAttribute('data-foodid');
+            addToCart(foodId);
+        }
+    });
 
-    function toggleMenu(){
-        subMenu.classList.toggle("open-menu");
+    function addToCart(foodId) {
+        // Make an AJAX request to add the item to the cart
+        fetch('cart1.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                foodId: foodId,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the cart count in the small trolley icon
+            updateCartCount(data.cartCount);
+
+            // Display a pop-up message
+            alert('Item added to cart!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     }
 
+    function updateCartCount(count) {
+        // Update the small trolley icon with the item count
+        document.getElementById('cartCount').innerText = count;
+    }
+
+    let subMenu = document.getElementById("subMenu");
+
+    function toggleMenu() {
+        subMenu.classList.toggle("open-menu");
+    }
 </script>
+
 
 </body>
 

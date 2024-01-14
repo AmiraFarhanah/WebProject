@@ -88,10 +88,11 @@
         }
     </script>
 
-    <div class="container">
+<div class="container">
         <div class="kotak form-kotak">
             <?php
             if (isset($_POST['submit'])) {
+                // Get form data
                 $name = $_POST['name'];
                 $username = $_POST['username'];
                 $password = $_POST['password'];
@@ -99,36 +100,38 @@
                 $phonenumber = $_POST['phonenumber'];
                 $email = $_POST['email'];
                 $id = $_SESSION['id'];
-                $image=$_POST['image'];
-                $qrcode = '<img src="https://api.qrserver.com/v1/create-qr-code/?data=' . $name . '&size=100x100">';
+                $qrcode = '<img src="https://api.qrserver.com/v1/create-qr-code/?data='.$name.'&size=100x100">';
 
-                $verify_query1 = mysqli_query($con, "SELECT Username FROM food_vendor WHERE Username= '$username' AND ID!='$id' ");
+                // Corrected way to handle file upload
+                $image = $_FILES['image'];
+                $image_name = $image['name'];
+                $image_tmp = $image['tmp_name'];
+
+                // Verify username uniqueness
+                $verify_query1 = mysqli_query($con, "SELECT Username FROM food_vendor WHERE Username='$username' AND ID!='$id'");
 
                 if (mysqli_num_rows($verify_query1) != 0) {
                     echo "<div class='message'>
-                        <p>This username has been used, Try another one!</p>
-                        </div><br>";
-
+                            <p>This username has been used, try another one!</p>
+                          </div><br>";
                     echo "<a href='javascript:self.history.back()'><button class='btn'>Go Back</button>";
-                }  else {
-                    if($image!=null){
-                        
-                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image' WHERE ID=$id") or die("error occurred");
+                } else {
+                    // Move uploaded image to the 'uploads' directory
+                    if (move_uploaded_file($image_tmp, __DIR__ . '/icon/' . $image_name)) {
+                        // Update database with user profile information
+                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address='$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode', Profilepicture='$image_name' WHERE ID=$id") or die("Error occurred");
 
-                    }
-                    else{
-                        $edit_query = mysqli_query($con, "UPDATE food_vendor SET Name='$name', Username='$username', Password='$password', Address= '$address', Phonenumber='$phonenumber', Email='$email', Qrcode='$qrcode' WHERE ID=$id") or die("error occurred");
-
-                    }
-
+                        // Redirect to homeadmin.php if the update is successful
                         if ($edit_query) {
-                            header("Location: /WebProject/Module1/homefoodvendor.php");
+                            header("Location: /WebProject/Module2/homefoodvendor.php");
                             exit();
                         } else {
                             echo "Error updating profile: " . mysqli_error($con);
                         }
+                    } else {
+                        echo "Error uploading image.";
                     }
-                
+                }
             } else {
                 $id = $_SESSION['id'];
                 $query = mysqli_query($con, "SELECT * FROM food_vendor WHERE ID='$id'");
@@ -166,7 +169,7 @@
             <?php
               }
             ?>
-                <form action="" method="post" >
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="file-input-container">
                     <input type="file" name="image" id="image" class="file-input">
                     <span id=fileNameDisplay></span><br><br>
