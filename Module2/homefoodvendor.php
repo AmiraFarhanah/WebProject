@@ -118,48 +118,39 @@ if (!isset($_SESSION['id'])) {
                 $foodstatus = isset($_POST['foodstatus']) ? $_POST['foodstatus'] : null;
                 $foodprice = isset($_POST['FoodPrice']) ? $_POST['FoodPrice'] : null;
 
-                // Handle file upload
                 if (isset($_FILES['foodimage']) && $_FILES['foodimage']['error'] === UPLOAD_ERR_OK) {
-                    $uploadDir = "uploads";
-                    $uploadFile = $uploadDir . basename($_FILES['foodimage']['name']);
-
-                    if (!file_exists($uploadDir)) {
-                        mkdir($uploadDir, 0777, true);
-                    }
-
-                    $uploadFile = $uploadDir . basename($_FILES['foodimage']['name']);
-
-                    if (move_uploaded_file($_FILES['foodimage']['tmp_name'], $uploadFile)) {
-                        $foodImageFilePath = $uploadFile;
-
-                        // QR Code generation using Google Charts API
-                        $qrCodeData = "Food Name: $foodname\nDescription: $fooddescription";
-                        $qrCodeAPI = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" . urlencode($qrCodeData);
-                        $qrCodePath = "uploads/qrcodes/{$foodname}.png";
-                        file_put_contents($qrCodePath, file_get_contents($qrCodeAPI));
-
-                        $insertSql = "INSERT INTO menu (Foodname, FoodDescription,  Username, FoodImage, FoodPrice, Qrcode, vendor_ID) 
-                        VALUES (:foodname, :fooddescription, :Username, :foodImage, :FoodPrice, :Qrcode, :vendor_ID)";
-
-                        $stmt = $conn->prepare($insertSql);
-                        $stmt->bindParam(':vendor_ID', $vendor_ID, PDO::PARAM_INT);
-                        $stmt->bindParam(':foodname', $foodname, PDO::PARAM_STR);
-                        $stmt->bindParam(':fooddescription', $fooddescription, PDO::PARAM_STR);
-                        $stmt->bindParam(':Username', $res_username, PDO::PARAM_STR);
-                        $stmt->bindParam(':FoodPrice', $foodprice, PDO::PARAM_STR);
-                        $stmt->bindParam(':foodImage', $foodImageFilePath, PDO::PARAM_STR);
-                        $stmt->bindParam(':Qrcode', $qrCodePath, PDO::PARAM_STR);
-
-
-                        $stmt->execute();
-
-                        header("Location: {$_SERVER['PHP_SELF']}");
-                        exit();
-                    } else {
-                        echo '<p>Failed to upload image.</p>';
-                    }
+                    $tempFilePath = $_FILES['foodimage']['tmp_name'];
+                    $foodImageFilePath = "/WebProject/Module2/uploads/" . $_FILES['foodimage']['name'];
+                    move_uploaded_file($tempFilePath, $foodImageFilePath);
+                } else {
+                    // Handle the case where no file is uploaded or an error occurs during upload
+                    echo '<p>Failed to upload food image.</p>';
                 }
-            }
+    
+                // Use Google Charts API to generate QR code
+    $qrCodePath = "\WebProject\Module2\uploads\qrcodes\. id().png";
+    $googleChartsApiUrl = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" . urlencode($foodname);
+    file_put_contents($qrCodePath, file_get_contents($googleChartsApiUrl));
+
+    $insertSql = "INSERT INTO menu (Foodname, FoodDescription, FoodImage, FoodPrice, Qrcode, vendor_ID) 
+                    VALUES (:foodname, :fooddescription, :foodImage, :FoodPrice, :Qrcode, :vendor_ID)";
+
+    $stmt = $conn->prepare($insertSql);
+    $stmt->bindParam(':vendor_ID', $vendor_ID, PDO::PARAM_INT);
+    $stmt->bindParam(':foodname', $foodname, PDO::PARAM_STR);
+    $stmt->bindParam(':fooddescription', $fooddescription, PDO::PARAM_STR);
+    $stmt->bindParam(':FoodPrice', $foodprice, PDO::PARAM_STR);
+    $stmt->bindParam(':foodImage', $foodImageFilePath, PDO::PARAM_STR);
+    $stmt->bindParam(':Qrcode', $qrCodePath, PDO::PARAM_STR);
+
+    $stmt->execute();
+
+    header("Location: {$_SERVER['PHP_SELF']}");
+    exit();
+} else {
+    echo '<p>Failed to upload image.</p>';
+}
+            
         }
 
         $id = $_SESSION['id'];

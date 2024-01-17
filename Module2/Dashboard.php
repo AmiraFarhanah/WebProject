@@ -129,7 +129,7 @@ try {
 ?>
 
 <?php
-// SQL query for total sales
+
 $sqlTotalSales = "SELECT `order`.`Menu_ID`, menu.Foodname, 
                       SUM(`order`.`OrderQuantity`) as quantity_sold,
                       SUM(`order`.`OrderQuantity` * menu.FoodPrice) as total_sales 
@@ -138,18 +138,15 @@ $sqlTotalSales = "SELECT `order`.`Menu_ID`, menu.Foodname,
                WHERE `order`.`vendor_ID` = ?
                GROUP BY `order`.`Menu_ID`";
 
-// Prepare and execute the query
 try {
     $stmtTotalSales = $pdo->prepare($sqlTotalSales);
 
-    // Bind the vendor ID to the placeholder
     $vendorId = $_SESSION['id'];
     $stmtTotalSales->bindParam(1, $vendorId, PDO::PARAM_INT);
 
-    // Execute the query
+ 
     $stmtTotalSales->execute();
 
-    // Fetch the results
     $resultTotalSales = $stmtTotalSales->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
@@ -157,7 +154,7 @@ try {
 ?>
 
 <?php
-// Extracting data for Chart.js (total sales)
+
 $labelsTotalSales = [];
 $dataTotalSales = [];
 
@@ -166,7 +163,6 @@ foreach ($resultTotalSales as $row) {
     $dataTotalSales[] = $row['total_sales'];
 }
 
-// Extracting data for Chart.js (total OrderQuantity)
 $labelsTotalQuantity = [];
 $dataTotalQuantity = [];
 
@@ -176,13 +172,14 @@ foreach ($resultTotalQuantity as $row) {
 }
 ?>
 
-<!-- HTML canvas element to render the total sales pie chart -->
+<div>Total Sale </div>
 <canvas id="myPieChartTotalSales" width="300" height="300"></canvas>
+<div>Total Sale of Food Quantity </div>
 <canvas id="myPieChartTotalQuantity" width="300" height="300"></canvas>
 
 
 <script>
-    // JavaScript code to create the total sales pie chart using Chart.js
+ 
 var ctxTotalSales = document.getElementById('myPieChartTotalSales').getContext('2d');
 var myPieChartTotalSales = new Chart(ctxTotalSales, {
     type: 'pie',
@@ -201,13 +198,13 @@ var myPieChartTotalSales = new Chart(ctxTotalSales, {
         }],
     },
     options: {
-        responsive: false, // Set to false to control the size manually
-        maintainAspectRatio: false, // Set to false to allow the canvas to dynamically resize
+        responsive: false, 
+        maintainAspectRatio: false,
     }
 });
 </script>
 <script>
-    // JavaScript code to create the total OrderQuantity pie chart using Chart.js
+    
 var ctxTotalQuantity = document.getElementById('myPieChartTotalQuantity').getContext('2d');
 var myPieChartTotalQuantity = new Chart(ctxTotalQuantity, {
     type: 'pie',
@@ -226,8 +223,8 @@ var myPieChartTotalQuantity = new Chart(ctxTotalQuantity, {
         }],
     },
     options: {
-        responsive: false, // Set to false to control the size manually
-        maintainAspectRatio: false, // Set to false to allow the canvas to dynamically resize
+        responsive: false, 
+        maintainAspectRatio: false, 
     }
 });
 </script>

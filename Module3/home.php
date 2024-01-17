@@ -33,7 +33,7 @@
                 <li><a href="/WebProject/Module3/cart1.php" class="cart">cart <span><?php echo $row_count;?></span></a></li>
             </ul>
             <div id="menu-btn" class="fas fa-bars"></div>
-            <img src="WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
+            <img src="/WebProject/Module1/login.png" class="user-pic" onclick="toggleMenu()">
 
 
             <div class="sub-menu-wrap" id="subMenu">
@@ -41,7 +41,7 @@
 
                 
                     <div class="user-info">
-                        <img src="WebProject/Module1/login.png" style="margin-right: 10px;">
+                        <img src="/WebProject/Module1/login.png" style="margin-right: 10px;">
                         <?php
                         $id=$_SESSION['id'];
                         
